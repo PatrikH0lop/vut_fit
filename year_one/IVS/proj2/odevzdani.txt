@@ -1,0 +1,9 @@
+﻿Kompletný produkt je odovzdaný na serveri ivs.
+Dátum a čas odovzdania na server ivs : 24.4.2017, 9:15
+Spôsob: Filezilla (sftp protokol)
+
+Iné súbory:
+	profiling/nums - testovacie hodnoty pre profiling
+	debugging.png - screenshot z debuggingu
+	src/icon.ico - icona 
+	src/zip - pomocny subor pre tvorbu zip archivu

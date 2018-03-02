@@ -1,0 +1,166 @@
+%document
+\documentclass[11pt,twocolumn,a4paper]{article}
+\usepackage[left=1.5cm,text={18cm, 25cm},top=2.5cm]{geometry}
+\usepackage[czech]{babel}
+\usepackage{times}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%matematicke znacenie
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+
+%Vysadenie definicii 
+\theoremstyle{definition}
+\newtheorem{mydef}{Definice}[section]
+\theoremstyle{plain}
+\newtheorem{myalg}[mydef]{Algoritmus}
+\newtheorem{mylem}{Věta}
+
+%Zaciatok dokumentu
+\begin{document}
+%Uvodna strana
+\begin{titlepage}
+ \begin{center}
+ {
+  \Huge
+  \textsc{Fakulta informačních technologií\\
+  \vspace{-3.5mm}
+  Vysoké učení technické v~Brně}\\
+ }
+  \vspace{\stretch{0.382}}
+ {
+  \LARGE
+  Typografie a~publikování\,--\,2. projekt\\
+  \vspace{-2.05mm}
+  Sazba dokumentů a~matematických výrazů\\
+ }
+  \vspace{\stretch{0.618}}
+ \end{center}
+{\Large 2017 \hfill Patrik Holop}
+\end{titlepage}
+
+\section*{Úvod}
+V~této úloze si vyzkoušíme sazbu titulní strany, matematických vzorců, prostředí a~dalších textových struktur obvyklých pro technicky zaměřené texty (například rovnice \eqref{eq:1} nebo definice \ref{def1} na straně \pageref{def1}.
+
+Na titulní straně je využito sázení nadpisu podle optického středu s~využitím zlatého řezu. Tento postup byl probírán na přednášce.
+
+
+\section{Matematický text}
+
+Nejprve se podíváme na sázení matematických symbolů a~výrazů v~plynulém textu. Pro množinu $V$ označuje $\mbox{card}(V)$ kardinalitu $V$.
+Pro množinu $V$ reprezentuje $V^*$ volný monoid generovaný množinou $V$ s~operací konkatenace.
+Prvek identity ve volném monoidu $V^*$ značíme symbolem $\varepsilon$.
+Nechť $V^+=V^*-\{\varepsilon\}$. Algebraicky je tedy $V^+$ volná pologrupa generovaná množinou $V$ s~operací konkatenace.
+Konečnou neprázdnou množinu $V$ nazvěme \textit{abeceda}.
+Pro $w\in V^*$ označuje $|w|$ délku řetězce $w$. Pro $W\subseteq V$ označuje $\mbox{occur}(w,W)$ počet výskytů symbolů z~$W$ v~řetězci $w$ a~$\mbox{sym}(w, i)$ určuje $i$-tý symbol řetězce $w$; například $\mbox{sym}(abcd,3) = c$.
+
+Nyní zkusíme sazbu definic a vět s~využitím balíku \texttt{amsthm}.
+
+\theoremstyle{definition} 
+\begin{mydef} \label{def1} 
+{\textit{Bezkontextová gramatika}} je čtveřice $G = (V,T,P,S)$, kde $V$ je totální abeceda,
+$T\subseteq V$ je abeceda terminálů, $S\in (V-T)$ je startující symbol a~$P$ je konečná množina \textit{pravidel} 
+tvaru $q\colon A\rightarrow \alpha$, kde $A\in (V-T)$, $\alpha\in V^*$ a~$q$ je návěští tohoto pravi\-dla. Nechť $N=V-T$ značí abecedu neterminálů.
+Po\-kud $q\colon A\rightarrow \alpha\in P$, $\gamma,\delta\in V^*$, $G$ provádí derivační krok z~$\gamma A\delta$ do $\gamma\alpha\delta$ podle pravidla $q\colon A\rightarrow A$, sym\-bolicky píšeme 
+$\gamma A\delta \Rightarrow \gamma\alpha\delta \ [q\colon A\rightarrow\alpha]$ nebo zjed\-nodušeně $\gamma A\delta \Rightarrow \gamma\alpha\delta$. Standardním způsobem definujeme $\Rightarrow^m$, kde $m\geq0$. Dále definu\-jeme tranzitivní uzávěr $\Rightarrow^+$ a~tranzitivně-reflexivní uzávěr $\Rightarrow^*$.
+\end{mydef}
+
+Algoritmus můžeme uvádět podobně jako definice textově, nebo využít pseudokódu vysázeného ve vhodném prostředí (například \texttt{algorithm2e}).
+
+\theoremstyle{plain}
+\begin{myalg}
+Algoritmus pro ověření bezkontextovosti gramatiky. Mějme gramatiku $G = (N, T, P, S)$.
+\begin{enumerate}
+ \item Pro každé pravidlo $p\in P$ proveď test, zda $p$ na levé straně obsahuje právě jeden symbol z~$N$.\label{step1}
+ \item Pokud všechna pravidla splňují podmínku z~kroku \ref{step1}, tak je gramatika $G$ bezkontextová.
+\end{enumerate}
+\end{myalg}
+
+\theoremstyle{definition}
+\begin{mydef}
+\textit{Jazyk} definovaný gramatikou $G$ definujeme jako $L(G) = \{w\in T^*|S\Rightarrow^* w\}$.
+\end{mydef}
+
+\subsection{Podsekce obsahující větu}
+
+\theoremstyle{definition}
+\begin{mydef}
+Nechť $L$ je libovolný jazyk. $L$ je \textit{bezkontextový jazyk}, když a~jen když $L = L(G)$, kde $G$ je libovolná bezkontextová gramatika.
+\end{mydef}
+
+\theoremstyle{definition}
+\begin{mydef}
+Množinu $\mathcal{L}_{CF} = \{L|L$ je bezkontextový jazyk\} nazýváme \textit{třídou bezkontextových jazyků}.
+\end{mydef}
+
+\theoremstyle{plain}
+\begin{mylem}\label{lem:1}
+Nechť $L_{abc}=\{a^nb^nc^n|n\geq0\}$. Platí, že $L_{abc}\notin \mathcal{L}_{CF}$.
+\end{mylem}
+
+\begin{proof}
+Důkaz se provede pomocí Pumping lemma pro bezkontextové jazyky, kdy ukážeme, že není možné, aby platilo, což bude implikovat pravdivost věty \ref{lem:1}.
+\end{proof}
+
+\section{Rovnice a odkazy}
+
+Složitější matematické formulace sázíme mimo plynulý text. Lze umístit několik výrazů na jeden řádek, ale pak je třeba tyto vhodně oddělit, například příkazem \verb|\quad|. 
+
+\begin{equation*}
+\sqrt[x^2]{y^{3}_{0}}\quad \mathbb{N}=\{0,1,2, \dots \}\quad x^{y^y}\neq x^{yy}\quad z_{i_j}\not\equiv  z_{ij} 
+\end{equation*}
+
+V~rovnici \eqref{eq:1} jsou využity tři typy závorek s~různou explicitně definovanou velikostí.
+
+\begin{eqnarray}
+\bigg\{ \Big[ \big(a+b\big)*c\Big]^d+1\bigg\} & = & x \label{eq:1}\\
+\lim\limits_{x\to\infty} \frac{\sin^2x + \cos^2x}{4} & = & y \nonumber
+\end{eqnarray}
+
+V~této větě vidíme, jak vypadá implicitní vysázení limity $\lim_{n\to\infty} f(n)$ v~normálním odstavci textu. Podobně je to i s~dalšími symboly jako $\sum_{1}^{n}$ či $\bigcup_{A\in \mathcal{B}}$ . V~případě vzorce $\lim\limits_{x\to 0} \frac{\sin x}{x} = 1$ jsme si vynutili méně úspornou sazbu příkazem \verb|\limits|.
+
+\begin{eqnarray}
+\int\limits_{a}^{b} f(x) \mathrm{d}x & = & -\int_{a}^{b} f(x) \mathrm{d}x\\ 
+\Big(\sqrt[5]{x^4}\Big)' = \Big(x^\frac{4}{5}\Big)' & = & \frac{4}{5}x^{\frac{1}{5}} = \frac{4}{5\sqrt[5]{x}}\\ 
+\overline{\overline{A\vee B}} & = & \overline{\overline{A} \wedge \overline{B}} 
+\end{eqnarray}
+
+
+\section{Matice}
+
+Pro sázení matic se velmi často používá prostředí \texttt{array} a~závorky (\verb|\left|,\verb|\right|). 
+
+\[ \left( \begin{array}{cc}
+a+b & b-a\\
+\widehat{\xi+\omega} & \hat{\pi}\\
+\vec{a} & \overleftrightarrow{AC}\\
+0 & \beta
+\end{array} \right) \]
+
+\[ \textbf{A} =  \left|\left| \begin{array}{cccc}
+a_{11} & a_{12} & \cdots & a_{1n}\\
+a_{21} & a_{22} & \cdots & a_{2n}\\
+\vdots & \vdots & \ddots & \vdots\\
+a_{m1} & a_{m2} & \cdots & a_{mn}\\
+\end{array} \right|\right| \]
+
+\[ \left| \begin{array}{cc}
+t & u\\
+v~& w
+\end{array} \right| = tw - uv \]
+
+Prostředí \texttt{array} lze úspěšně využít i~jinde.
+
+$$ \binom{n}{k} = \left\{
+\begin{array}{l l}
+\frac{n!}{k!(n-k)!} & \text{pro } 0\leq k\leq n \\
+0 & \text{pro } k\leq 0 \text{ nebo } k\,>\,n
+\end{array} \right. $$
+
+\section{Závěrem}
+
+V~případě, že budete potřebovat vyjádřit matematickou konstrukci nebo symbol a~nebude se Vám dařit jej nalézt v~samotném \LaTeX u, doporučuji prostudovat možnosti ba\-líku maker \AmS-\LaTeX .
+Analogická poučka platí obec\-ně pro jakoukoli konstrukci v~\TeX u.
+
+\end{document}

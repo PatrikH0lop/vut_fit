@@ -1,0 +1,42 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[left=1.5cm,text={18cm, 25cm},top=2.5cm]{geometry}
+\usepackage[czech]{babel}
+\usepackage{times}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{url}
+%\DeclareUrlCommand\url{Dostupné z: \def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
+%\usepackage[sorting=none]{biblatex}
+%\usepackage{hyperref}
+
+\bibliographystyle{czechiso}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\Huge
+\textsc{Fakulta informačních technologií\\
+Vysoké učení technické v~Brně}
+\\[84mm]
+Typografia a~publikovanie\,--\,4. projekt\\
+\vfill
+{\LARGE 2017 \hfill Patrik Holop}
+\end{center}
+\end{titlepage}
+
+\section{Kryptografia}
+Kryptografia je odbor zaoberajúci sa tvorbou šifier. Na rozdiel od kryptoanalýzi, ktorej úloha je nájsť algoritmus na dekódovanie nerozlúštiteľnej šifry, úloha kryptografie je takúto šifru vytvoriť.
+\subsection{Počiatky} 
+Počiatky kryptografie siahajú do dôb, kedy bolo nutné začať šifrovať správy. Prvé známky pochádzajú zo staroveku, kedy v~snahe skryť pred nepriateľmi vojenské taktiky v~boji, posielali generáli správy v~zašifrovanej podobe. Historické šifrovacie systémy sa zaoberali šiframi ako napr. jednoduchá zámena či transpozícia \cite{SymKrypt}.
+Kvôli jednoduchej realizácii používali Sparťania šifru nazývanú Scytale \cite{MatZInf}. Kus papieru, na ktorý mala byť správa napísaná, sa omotal na drevený valec danej hrúbky a~správa sa napísala zvislo na obtočený papier. Po rozvinutí papiera na prvý pohľad daný text nedával zmysel. Na správne dekóvanie správy musel príjemca namotať papier na valec rovnakej hrúbky ako bola správa napísaná. Kľúčom na zakódovanie i~dekódovanie šifry bola hrúbka valca.
+
+Takto manuálny spôsob šifrovania sa postupom času stal neefektívny a~za významný posun v~oblasti kryptografie vďačíme J. Caesarovi. Caesarova šifra spočíva v~substitúcii každého písmena v~pôvodnom texte za písmeno posunuté v~abecede o~pevný počet miest. Správa ahoj sa posunutím každého písmena o~4 miesta v~abecede zobrazí na dktm. Kľúčom bol počet písmen, o~ktoré sa každé písmeno posunie.
+V~súčasnoti sa Ceasorovou šifrou označuje každý postup z~množiny algoritmov, ktoré sú založené na posúvaní písmen v~abecede o~určitý počet. Kľúčom nemusí byť jedno číslo, ale aj postupnosť čísiel. V~takom prípade sa kľúč cyklicky naklonuje, prípadne skráti tak, aby každému písmenu pôvodnej správy prislúchalo práve jedno číslo v~kľúči, o~ktoré bude posunuté.  
+
+\subsection{Súčasnosť}
+V~súčasnosti sa útočníci zameriavajú predovšetkým na citlivé informácie o~svojich obetiach \cite{SecWorld}. V ohrození je taktiež finančný sektor, ktorý odoláva každodenným snahám o~dešifrovanie a~odhalenie hesiel od bankových účtov \cite{CryptoMagazine2}. Dnešná výpočetná sila strojov by dokázala vyššie spomenuté spôsoby šifrovanie jednoducho prekonať a~nájsť správny kľúč v~krátkom čase. Bezpečnosť preto spočíva vo výpočetnej zložitosti daného algoritmu \cite{ZakKryAlg}. Pre pochopenie modernej kryptografie sú nutné znalosti matematiky a~počítačovej bezpečnosti  \cite{HandOfInf}. Pri návrhu nového algoritmu sa preto kladie dôraz na jeho bezpečnosť a~výkon, aby šifrovanie nespomaľovalo spracovanie informáciií \cite{BakPrac2}. V~snahe vytvoriť sofistikovanejšie algoritmy šifrovania sa kryptografia v~súčasnoti opiera o~jednosmerné procesy zvané aj hashovacie funkcie, ktoré sú porovnateľné s~inými krytografickými algoritmami \cite{Krypt}. Hashovacia funkcia na základe matematických operácií vytvorí pre každý reťazec jedinečnú postupnosť znakov, prípadne aj čísiel zvanú hash. Na dekódovanie sa použije iná matematická operácia, ktorej výsledok je inverziou pôvodnej funkcie a~adresát tak dostane dekódovanú správu. V~prípade zložitejších funkcií je takmer nemožné nájsť či uhádnuť pôvodnú správu iba pomocou hashu bez znalosti implementácie funkcií. Práve preto sa v~súčasnosti považujú za jeden z~najefektívnejších spôsobov šifrovania.
+Iné metódy, ako napr. metóda čiernej skrinky, kladú hlavný dôraz na skrytie šifrovacích kľúčov pred útočníkom \cite{CryptoMagazine}. Zaútočiť sa dá nielen na výslednú šifru, ale aj na samotné vykonávanie kryptografického algoritmu, napr. zmena pamäte Cache pri algoritme AES \cite{BakPrac1}.
+\newpage
+\bibliography{bib1}
+
+\end{document}

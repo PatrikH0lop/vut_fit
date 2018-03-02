@@ -1,0 +1,4 @@
+xholop01 100 (matematická knihovna, testy, smerodajná odchýlka, mockup)
+xchoch07 100 (matematická knihovna, testy, instalátor, mockup)
+xkaras34 100 (parser, profiling, Makefile)
+xkapou04 100 (GUI, dokumentace a manuál, mockup)
