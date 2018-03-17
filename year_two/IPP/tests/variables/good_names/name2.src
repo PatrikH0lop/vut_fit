@@ -1,0 +1,15 @@
+.ippcode18
+
+DEFVAR TF@lllllllllllllllllllllllllll
+DEFVAR TF@_test___*$%-
+MOVE TF@_test___*$%- int@5
+DEFVAR LF@test12345678_987654321
+MOVE LF@test12345678_987654321 int@5
+DEFVAR TF@*5
+DEFVAR TF@int
+DEFVAR TF@string
+DEFVAR GF@bool
+DEFVAR TF@true
+DEFVAR TF@false
+DEFVAR GF@int_string178*%
+DEFVAR LF@INT

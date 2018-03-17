@@ -1,0 +1,23 @@
+# IPK Projekt 1 - Varianta 1
+Projekt klient-server komukacie a zistovanie informacii o uzivateloch
+v jazyku C++.
+
+## Preklad
+V pripade prekladu oboch aplikacie staci prikaz "make". V pripade samostatneho
+prekladu je potrebne prekladat nasledovne:
+server: "make ipk-server"
+klient: "make ipk-client"
+
+## Spustenie 
+./ipk-client -h host -p port [-n|-f|-l] login
+./ipk-server -p port                              
+
+## Struktura archivu
+./ipk_proj1_server.cpp : zdrojovy subor serveru
+./ipk_proj1_client.cpp : zdrojovy subor klienta
+dokumentace.pdf        : dokumentacia k projektu
+readme                 : zakladne informacie
+Makefile
+
+## Autor
+Patrik Holop, xholop01

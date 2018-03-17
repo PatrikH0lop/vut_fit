@@ -1,0 +1,14 @@
+.ippcode18#comment1
+defvar TF@t1#com2
+MOVE TF@t1 int@5#3com3
+
+
+WRITE TF@t1
+MOVE TF@t1 string@ahoj#com4
+
+
+
+#void com
+WRITE TF@t1
+
+#last comment

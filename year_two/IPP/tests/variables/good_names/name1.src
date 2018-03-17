@@ -1,0 +1,12 @@
+.ippcode18
+DEFVAR GF@test
+DEFVAR LF@test1
+DEFVAR TF@test*
+DEFVAR GF@*tes4t
+DEFVAR LF@_test4
+DEFVAR TF@-te5st
+DEFVAR LF@tes_$t
+DEFVAR GF@te*st&
+DEFVAR LF@%te_s
+DEFVAR GF@*test*
+DEFVAR GF@*-$&%*

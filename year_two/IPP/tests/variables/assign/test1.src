@@ -1,0 +1,25 @@
+.ippcode18
+defvar TF@a
+MOVE TF@a int@5
+WRITE TF@a
+MOVE TF@a int@-1
+WRITE TF@a
+MOVE TF@a bool@true
+WRITE TF@a
+MOVE TF@a bool@false
+WRITE TF@a
+MOVE TF@a string@ahoj
+WRITE TF@a
+
+DEFVAR TF@b
+MOVE TF@b int@189
+MOVE TF@a TF@b
+WRITE TF@a
+MOVE TF@b string@ahoj
+MOVE TF@a TF@b
+WRITE TF@a
+MOVE TF@b bool@true
+MOVE TF@a TF@b
+WRITE TF@a
+
+

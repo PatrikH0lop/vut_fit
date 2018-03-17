@@ -1,0 +1,22 @@
+.ippcode18
+DEFVAR TF@a
+
+WRITE int@5
+WRITE int@0
+WRITE int@-1
+WRITE int@5
+WRITE int@-2
+
+WRITE string@test
+WRITE string@5.6@
+WRITE string@__a
+WRITE string@string@
+WRITE string@**test**
+WRITE string@Písanie
+WRITE string@αβΓ
+
+WRITE bool@true
+WRITE bool@false
+
+
+

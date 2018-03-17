@@ -1,0 +1,28 @@
+.ippcode18
+
+#vymena 2 cisiel 
+#na zasobniku
+
+defvar TF@var1 
+defvar TF@var2
+MOVE TF@var1 int@5
+MOVE TF@var2 int@-5
+
+PUSHS TF@var1
+PUSHS TF@var2
+POPS TF@var1
+POPS TF@var2
+
+#vymenene cisla
+WRITE TF@var1
+WRITE TF@var2
+
+#vymena pomocou tretej premennej
+DEFVAR TF@var3
+MOVE TF@var3 TF@var1
+MOVE TF@var1 TF@var2
+MOVE TF@var2 TF@var3
+
+#povodne poradie
+WRITE TF@var1
+WRITE TF@var2

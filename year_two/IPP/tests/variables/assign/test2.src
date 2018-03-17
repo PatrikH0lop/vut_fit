@@ -1,0 +1,16 @@
+.ippcode18
+
+Defvar TF@a
+Defvar GF@b
+Defvar LF@c
+
+MOVE TF@a int@5
+MOVE GF@b string@8α
+MOVE LF@c bool@true
+
+MOVE LF@c TF@a
+MOVE TF@a GF@b
+MOVE GF@b LF@c
+
+WRITE TF@a
+WRITE GF@b
