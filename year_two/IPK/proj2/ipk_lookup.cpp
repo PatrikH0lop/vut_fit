@@ -3,7 +3,7 @@
 // about:  Klient dotazujuci sa na DNS
 
 
-//kniznice
+//libraries
 #include <vector>
 #include <iostream>
 #include <unistd.h>
@@ -19,319 +19,337 @@
 #include <sstream>
 
 
-//programove konstanty
+//program constants
 #define ERROR 2
 #define RUNTIME_ERROR 1
-
 #define BUFSIZE 512
+
 
 using namespace std;
 typedef struct sockaddr_in sockaddr_in;
 
-int resolve_type(string type) {
-    if (type == "PTR")
-        return 12;
-    else if (type == "A")
-        return 1;
-    else if (type == "AAAA")
-        return 28;
-    else if (type == "NS")
-        return 2;
-    else if (type == "CNAME")
-        return 5;
-    else {
-        return -1;
-        //exit(RUNTIME_ERROR);
-    }
-}
 
-string desolve_type(unsigned long type) {
-    if (type == 12)
-        return "PTR";
-    else if (type == 1)
-        return "A";
-    else if (type == 28)
-        return "AAAA";
-    else if (type == 2)
-        return "NS";
-    else if (type == 5)
-        return "CNAME";
-    else {
-        return "-1";
-        //exit(RUNTIME_ERROR);
-    }
-}
-
+map<string, string> dns_cache;
+vector<string> processed;
 void check_params(int argc, char *argv[], string *server, int *timeout, string *type, bool *iter, string *name);
-//Trieda reprezentujuca klientsku cast
+
+
+//data structures and functions to resolve DNS type
+map<int, string> int_to_type = {{1, "A"}, {2, "NS"}, {5, "CNAME"}, {12, "PTR"}, {28, "AAAA"}};
+map<string, int> type_to_int = {{"A", 1}, {"NS", 2}, {"CNAME", 5}, {"PTR", 12}, {"AAAA", 28}};
+int ret = 0;
+
+
+//get type from string
+int resolve_type(string type) {
+    if (type_to_int.find(type) == type_to_int.end()) {
+        return -1;
+    }
+    else {
+        return type_to_int.find(type)->second;
+    }
+}
+
+
+//return type from int
+string desolve_type(unsigned long type) {
+    if (int_to_type.find(type) == int_to_type.end()) {
+        return "-1";
+    }
+    else {
+        return int_to_type.find(type)->second;
+    }
+}
+
+
+//class representing client part of application for connecting to server
 class Client {
-private:
-    int port = 53;
-    string server_name, message;
-    int client_socket;
-    sockaddr_in server_address;
+    private:
+        int port = 53;
+        int timeout = 5;
+        string server_name, message;
+        int client_socket;
+        sockaddr_in server_address;
 
-public:
-    Client(string server_name, string message) {
-        this->server_name = server_name;
-        this->client_socket = -1;
-        this->message = message;
-        bzero((char *) &server_address, sizeof(server_address));
-    }
-
-    //otestovanie poslednej odpovede pre pripadne chyby
-    void test_communication(int comm_desc, string message) {
-        if (comm_desc < 0) {
-            cerr << message << " failed" << endl;
-            close(client_socket);
-            exit(RUNTIME_ERROR);
+    public:
+        Client(string server_name, string message, int timeout) {
+            this->server_name = server_name;
+            this->client_socket = -1;
+            this->message = message;
+            this->timeout = timeout;
+            bzero((char *) &server_address, sizeof(server_address));
         }
-    }
 
-    //poslanie a overenie loginu
-    int send_query(char *buf, char *buff) {
-        //endto(s,(char*)buf,sizeof(struct DNS_HEADER) + (strlen((const char*)qname)+1) + sizeof(struct QUESTION),0,(struct sockaddr*)&dest,sizeof(dest)) < 0)
-        int desc = sendto(this->client_socket, message.c_str(), message.length(), 0, (struct sockaddr*)&server_address, sizeof(server_address));
-        test_communication(desc, "sending message");
-        fill_n(buf, BUFSIZE, 0);
-        int dsa = sizeof server_address;
-        fill_n(buff, 65000, 0);
-        desc = recvfrom(client_socket, (char*)buff, 65000, 0, (struct sockaddr*)&server_address, (socklen_t*)&dsa);
-        test_communication(desc, "receiving message ack");
-        return desc;
-    }
+        //test of last response of communication
+        void test_communication(int comm_desc, string message) {
+            if (comm_desc < 0) {
+                cerr << message << " failed" << endl;
+                close(client_socket);
+                exit(RUNTIME_ERROR);
+            }
+        }
 
-    int get_name(char *buf, unsigned long index, string *str) {
-        int current_ind = index;
-        int skok = 0;
-        while (buf[current_ind] != '\0') {
-            bitset<16> bit_field = (unsigned char)buf[current_ind];
-            if (bit_field.test(7) && bit_field.test(6)) { // top 11 means reference
-                current_ind++;
-                bitset<16> address = buf[current_ind]; //load second part of address
-                bit_field.set(7, 0); //turn of 11 signs
-                bit_field.set(6,0);
-                address = address ^ (bit_field << 8);
-                int d = get_name(buf, address.to_ulong(), str);
-                skok++;
-                break;
-                //return index;
+        //send and validate DNS query
+        int send_query(char *buf, char *buff) {
+            int desc = sendto(this->client_socket, message.c_str(), message.length(), 0, (struct sockaddr*)&server_address, sizeof(server_address));
+            test_communication(desc, "sending message");
+            fill_n(buf, BUFSIZE, 0);
+            int dsa = sizeof server_address;
+            fill_n(buff, 65000, 0);
+            desc = recvfrom(client_socket, (char*)buff, 65000, 0, (struct sockaddr*)&server_address, (socklen_t*)&dsa);
+            test_communication(desc, "receiving message ack");
+            return desc;
+        }
+
+        //saves name from DNS message starting at index to str, supports references
+        //returns position at which name ends and next information starts
+        int get_name(char *buf, unsigned long index, string *str) {
+            int current_ind = index;
+            int skok = 0;
+            while (buf[current_ind] != '\0') {
+                bitset<16> bit_field = (unsigned char)buf[current_ind];
+                if (bit_field.test(7) && bit_field.test(6)) { // top 11 means reference
+                    current_ind++;
+                    bitset<16> address = buf[current_ind]; //load second part of address
+                    bit_field.set(7, 0); //turn of 11 signs
+                    bit_field.set(6,0);
+                    address = address ^ (bit_field << 8);
+                    int d = get_name(buf, address.to_ulong(), str);
+                    skok++;
+                    break;
+                }
+                else {
+                    str->push_back(buf[current_ind]);
+                    current_ind++;
+                }
+            }
+            return current_ind+max(skok,1);
+        }
+
+        //prints name in shape Nstring*, where N is length of string
+        void print_name(string str, string *name, bool print) {
+            int load_num = 1, load_val = 0, first = 1, index = 0, i = 0;
+            while (i < str.length()) {
+                if (load_num == 1) {
+                    load_val = str[i];
+                    load_num = 0;
+                    i++;
+                    if (first == 1) {
+                        first = 0;
+                        continue;
+                    }
+                    if (print) {
+                        cout << ".";
+                    }
+                    *name += '.';
+                } else {
+                    if (index < load_val) {
+                        index++;
+                        if (print) {
+                            cout << str[i];
+                        }
+                        *name += str[i];
+                        i++;
+                    } else {
+                        index = 0;
+                        load_num = 1;
+                    }
+                }
+            }
+            *name += str[i];
+            if (print)
+                cout << ".";
+        }
+
+        //loads question from DNS response
+        int load_query(int index, char *buf) {
+            int begin = index;
+            while (buf[index] != '\0') {
+                index++;
+            }
+            index += 5; //skips type and class
+            return index;
+        }
+
+        //prints IPV6 address to stdout and/or string name
+        int print_ipv6(char *buf, unsigned long index, unsigned long data_len, string *name, bool print) {
+            struct sockaddr_in6 sa;
+            char str[INET6_ADDRSTRLEN];
+            char b[16];
+            char *addr = (char*)&(sa.sin6_addr);
+            for (int i=index; i<index+data_len; i++) {
+                addr[i-index] = buf[i];
+            }
+            inet_ntop(AF_INET6, &(sa.sin6_addr), str, INET6_ADDRSTRLEN);
+            if (print) printf("%s", str);
+            *name = str;
+        }
+
+        //loads answers from DNS response
+        //prints position at which answers ended
+        int load_answers(unsigned long index, char *buf, bool print, vector<vector<string> > *answers) {
+            //get name
+            string s_name;
+            index = get_name(buf, index, &s_name);
+
+            //get type
+            bitset<16> types = buf[index+1];
+            bitset<16> t1 = buf[index+0];
+            types = types ^ (t1 << 8);
+            unsigned long types_num = types.to_ulong();
+            if (desolve_type(types_num) == "-1") return -1;
+
+            //add name, type to returned answer
+            vector <string> retstring;
+            string name = "";
+            print_name(s_name, &name, print);
+            retstring.push_back(name);
+            retstring.push_back(desolve_type(types_num));
+            if (print) {
+                cout << " IN ";
+                cout << desolve_type(types_num) << " ";
+            }
+
+            //get data length
+            bitset<16> len = buf[index+9];
+            bitset<16> l1 = buf[index+8];
+            len = len ^ (l1 << 8);
+            unsigned long data_len = len.to_ulong();
+
+            //get data based on data length
+            if (types_num == 1) { //A
+                if (print) {
+                    cout << int((unsigned char)(buf[index+10])) << ".";
+                    cout << int((unsigned char)(buf[index+11])) << ".";
+                    cout << int((unsigned char)(buf[index+12])) << ".";
+                    cout << int((unsigned char)(buf[index+13]));
+                }
+                string addr = "";
+                addr += to_string(int((unsigned char)(buf[index+10]))) + '.';
+                addr += to_string(int((unsigned char)(buf[index+11]))) + '.';
+                addr += to_string(int((unsigned char)(buf[index+12]))) + '.';
+                addr += to_string(int((unsigned char)(buf[index+13]))) + '\0';
+                retstring.push_back(addr);
+            }
+            else if (types_num == 28) { //AAAA
+                string addr = "";
+                print_ipv6(buf, index+10, data_len, &addr, print);
+                retstring.push_back(addr);
             }
             else {
-                str->push_back(buf[current_ind]);
-                current_ind++;
+                string name;
+                get_name(buf, index+10, &name);
+                string retname = "";
+                print_name(name, &retname, print);
+                retstring.push_back(retname);
             }
-        }
-        return current_ind+max(skok,1);
-    }
-
-    void print_name(string str, string *name, bool print) {
-        int load_num = 1;
-        int load_val = 0;
-        int first = 1;
-        int index = 0;
-        int i = 0;
-
-        while (i < str.length()) {
-            if (load_num == 1) {
-                load_val = str[i];
-                load_num = 0;
-                i++;
-                if (first == 1) {
-                    first = 0;
-                    continue;
-                }
-                if (print) {
-                    cout << ".";
-                }
-                *name += '.';
-            } else {
-                if (index < load_val) {
-                    index++;
-                    if (print) {
-                        cout << str[i];
-                    }
-                    *name += str[i];
-                    i++;
-                } else {
-                    index = 0;
-                    load_num = 1;
-                }
-            }
-        }
-        *name += str[i];
-        if (print)
-            cout << ".";
-    }
-
-    int load_query(int index, char *buf) {
-        int begin = index;
-        while (buf[index] != '\0') {
-            index++;
-        }
-        index += 5;
-        return index;
-    }
-
-    int print_ipv6(char *buf, unsigned long index, unsigned long data_len, string *name, bool print) {
-        struct sockaddr_in6 sa;
-        char str[INET6_ADDRSTRLEN];
-        char b[16];
-        char *addr = (char*)&(sa.sin6_addr);
-        for (int i=index; i<index+data_len; i++) {
-            addr[i-index] = buf[i];
-        }
-        inet_ntop(AF_INET6, &(sa.sin6_addr), str, INET6_ADDRSTRLEN);
-        if (print) printf("%s", str);
-        *name = str;
-    }
-
-
-    int load_answers(unsigned long index, char *buf, bool print, vector<vector<string> > *answers) {
-        string s_name;
-        index = get_name(buf, index, &s_name);
-        //class index 4,5
-
-        bitset<16> types = buf[index+1];
-        bitset<16> t1 = buf[index+0];
-        types = types ^ (t1 << 8);
-        unsigned long types_num = types.to_ulong();
-        if (desolve_type(types_num) == "-1") return -1;
-
-        vector <string> retstring;
-        string name = "";
-        print_name(s_name, &name, print);
-        retstring.push_back(name);
-        retstring.push_back(desolve_type(types_num));
-        if (print) {
-            cout << " IN ";
-            cout << desolve_type(types_num) << " ";
-        }
-
-        bitset<16> len = buf[index+9];
-        bitset<16> l1 = buf[index+8];
-        len = len ^ (l1 << 8);
-        unsigned long data_len = len.to_ulong();
-        if (types_num == 1) { //A
             if (print) {
-                cout << int((unsigned char)(buf[index+10])) << ".";
-                cout << int((unsigned char)(buf[index+11])) << ".";
-                cout << int((unsigned char)(buf[index+12])) << ".";
-                cout << int((unsigned char)(buf[index+13]));
+                cout << endl;
             }
-            string addr = "";
-            addr += to_string(int((unsigned char)(buf[index+10]))) + '.';
-            addr += to_string(int((unsigned char)(buf[index+11]))) + '.';
-            addr += to_string(int((unsigned char)(buf[index+12]))) + '.';
-            addr += to_string(int((unsigned char)(buf[index+13]))) + '\0';
-            retstring.push_back(addr);
-        }
-        else if (types_num == 28) { //AAAA
-            string addr = "";
-            print_ipv6(buf, index+10, data_len, &addr, print);
-            retstring.push_back(addr);
-        }
-        else {
-            string name;
-            get_name(buf, index+10, &name);
-            string retname = "";
-            print_name(name, &retname, print);
-            retstring.push_back(retname);
-        }
-        if (print) {
-            cout << endl;
-        }
-        answers->push_back(retstring);
-        return index+10+data_len;
-    }
-
-    vector<vector<vector<string > > > process_response(char *buff, int desc, bool iterative, bool print) {
-        bitset<16> questions = buff[5];
-        bitset<16> q1 = buff[4];
-        questions = questions ^ (q1 << 8);
-        unsigned long questions_num = questions.to_ulong();
-
-        bitset<16> answers = buff[7];
-        bitset<16> a1 = buff[6];
-        answers = answers ^ (a1 << 8);
-        unsigned long answers_num = answers.to_ulong();
-
-        bitset<16> authorities = buff[9];
-        bitset<16> au1 = buff[8];
-        authorities = authorities ^ (au1 << 8);
-        unsigned long auth_num = authorities.to_ulong();
-        //cout << "Auth: " << auth_num << endl;
-
-        bitset<16> additional = buff[10];
-        bitset<16> ad1 = buff[11];
-        additional = additional ^ (ad1 << 8);
-        unsigned long add_num = additional.to_ulong();
-        //cout << "Add: " << add_num << endl;
-
-        vector<vector<vector<string> > > output;
-        unsigned long next = 12;
-        for (int j = 0; j<questions_num; j++) { // QUESTION
-            next = load_query(next, buff);
+            answers->push_back(retstring);
+            return index+10+data_len;
         }
 
-        vector<vector <string> > answ;
-        for (int j = 0; j<answers_num; j++) { // ANSWERS
-            next = load_answers(next, buff, print, &answ);
-        }
-        output.push_back(answ);
+        // processed all DNS responses - questions, answers, auths, adds
+        vector<vector<vector<string > > > process_response(char *buff, int desc, bool iterative, bool print) {
+            //get number of questions
+            bitset<16> questions = buff[5];
+            bitset<16> q1 = buff[4];
+            questions = questions ^ (q1 << 8);
+            unsigned long questions_num = questions.to_ulong();
 
-        if (iterative) {
-            vector<vector <string> > au;
-            for (int j = 0; j<auth_num; j++) { // AUTHORITIES
-                next = load_answers(next, buff, false, &au);
+            //get number of answers
+            bitset<16> answers = buff[7];
+            bitset<16> a1 = buff[6];
+            answers = answers ^ (a1 << 8);
+            unsigned long answers_num = answers.to_ulong();
+
+            //get number of authoritative answers
+            bitset<16> authorities = buff[9];
+            bitset<16> au1 = buff[8];
+            authorities = authorities ^ (au1 << 8);
+            unsigned long auth_num = authorities.to_ulong();
+
+            //get number of additional answers
+            bitset<16> additional = buff[10];
+            bitset<16> ad1 = buff[11];
+            additional = additional ^ (ad1 << 8);
+            unsigned long add_num = additional.to_ulong();
+            if (auth_num != 0) ret = 1;
+
+            vector<vector<vector<string> > > output;
+            unsigned long next = 12;
+
+            for (int j = 0; j<questions_num; j++) { // QUESTION
+                next = load_query(next, buff);
             }
-            output.push_back(au);
-            vector<vector <string> > adda;
-            for (int j = 0; j<add_num; j++) { // ADDITIONAL
-                next = load_answers(next, buff, false, &adda);
+
+            vector<vector <string> > answ;
+            for (int j = 0; j<answers_num; j++) { // ANSWERS
+                next = load_answers(next, buff, print, &answ);
             }
-            output.push_back(adda);
+            output.push_back(answ);
+
+            if (iterative) {
+                vector<vector <string> > au;
+                for (int j = 0; j<auth_num; j++) { // AUTHORITIES
+                    next = load_answers(next, buff, false, &au);
+                }
+                output.push_back(au);
+                vector<vector <string> > adda;
+                for (int j = 0; j<add_num; j++) { // ADDITIONAL
+                    next = load_answers(next, buff, false, &adda);
+                }
+                output.push_back(adda);
+            }
+            return output;
         }
-        return output;
-    }
 
-    //ustanovenie spojenia so serverom
-    vector<vector<vector<string > > > establish_connection(bool iterative, bool print) {
-        char buffer[BUFSIZE];
-        fill_n(buffer, BUFSIZE, 0);
+        //create connection with server and return answer, auth and adds
+        vector<vector<vector<string > > > establish_connection(bool iterative, bool print) {
+            char buffer[BUFSIZE];
+            fill_n(buffer, BUFSIZE, 0);
 
-        //vytvorenie socketu
-        if ((client_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) <= 0) {
-            cerr <<  "Error while creating socket" << endl;
+            //create socket
+            if ((client_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) <= 0) {
+                cerr <<  "Error while creating socket" << endl;
+                close(client_socket);
+                exit(RUNTIME_ERROR);
+            }
+
+            //set timeout
+            struct timeval tv;
+            tv.tv_sec = this->timeout;
+            tv.tv_usec = 0;
+            setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO,(struct timeval *)&tv,sizeof(struct timeval));
+
+            //set basic attributes of connect
+            server_address.sin_family = AF_INET;
+            server_address.sin_addr.s_addr = inet_addr(server_name.c_str());
+            server_address.sin_port = htons(this->port);
+            socklen_t serverlen = sizeof(server_address);
+
+            int bytestx, bytesrx;
+
+            //communication with dns server
+            char buff[65000];
+            int kolko = send_query(buffer, buff);
+            vector<vector<vector<string> > > output;
+            output = process_response(buff, kolko, iterative, print);
             close(client_socket);
-            exit(RUNTIME_ERROR);
+            return output;
         }
-
-        //nastavenie zakladnych atributov
-        server_address.sin_family = AF_INET;
-        server_address.sin_addr.s_addr = inet_addr(server_name.c_str());
-        server_address.sin_port = htons(this->port);
-        socklen_t serverlen = sizeof(server_address);
-
-        int bytestx, bytesrx;
-
-        //uvodna komunikacia poslanim loginu a moznosti
-        char buff[65000];
-        int kolko = send_query(buffer, buff);
-        vector<vector<vector<string> > > output;
-        output = process_response(buff, kolko, iterative, print);
-        close(client_socket);
-        return output;
-    }
 };
 
 
+//class representing DNS HEADER
 class BIT_DNS_HEADER {
     public:
         bitset<96> header;
         map<string, int> access_list;
 
         BIT_DNS_HEADER() {
+            //set offset of certain flags within header
             access_list.insert(pair<string,int>("id", 80));
             access_list.insert(pair<string,int>("qr", 79));
             access_list.insert(pair<string,int>("opcode", 75));
@@ -347,6 +365,7 @@ class BIT_DNS_HEADER {
             access_list.insert(pair<string,int>("addi_rrs", 0));
         }
 
+        //set certain flags based on offset
         void set_value(string sel, int value) {
             int offset = access_list.find(sel)->second;
             bitset<96> new_value = value;
@@ -362,6 +381,8 @@ class BIT_DNS_HEADER {
         }
 };
 
+
+//Extended DNS HEADER with data representing DNS QUERY
 class BIT_DNS_QUERY: BIT_DNS_HEADER {
     public:
         string encoded_name;
@@ -394,6 +415,7 @@ class BIT_DNS_QUERY: BIT_DNS_HEADER {
             set_value("set", 0);
             set_value("rcode", 0);
             set_value("questions", 1);
+            set_value("res", 2);
             set_value("answ_rrs", 0);
             set_value("auth_rrs", 0);
             set_value("addi_rrs", 0);
@@ -515,132 +537,155 @@ class BIT_DNS_QUERY: BIT_DNS_HEADER {
 };
 
 
-int iterative_search(string type, string name, string server) {
+string root_name = "";
+string root_ip = "";
+
+
+//performs iterative search on given server and name to be found
+string iterative_search(string type, string name, string server, int timeout) {
     vector<vector<vector<string> > > answers;
-    //cout << "BEGIN ITER" << endl;
-    BIT_DNS_QUERY q(true, "NS", ".");
-    Client c(server, q.final_message);
-    answers = c.establish_connection(true, false);
-
     string main_server = "";
-    if (answers[0].size()>0) {
-        if (answers[0][0].size() > 0) {
-            answers[0][0][0].pop_back();
-            answers[0][0][0] += ".";
-            answers[0][0][2].pop_back();
-            answers[0][0][2] += ".";
-            cout << answers[0][0][0] << " IN " << answers[0][0][1] << " " << answers[0][0][2] << endl;
-            main_server = answers[0][0][2];
-        };
-    }
-    main_server.pop_back();
-    //cout << "FOUND MAIN_SERVER " << main_server << endl;
-
-    answers.clear();
-    //string main = "j.root-servers.net.";
-    BIT_DNS_QUERY q2(true, "A", main_server);
-    Client c2(server, q2.final_message);
-    answers = c2.establish_connection(true, true);
-
     string main_server_ip = "";
-    if (answers[0].size()>0) {
-        if (answers[0][0].size() > 0) {
-            main_server_ip = answers[0][0][2];
-        };
+
+    if (root_name == "") {
+        BIT_DNS_QUERY q(true, "NS", ".");
+        Client c(server, q.final_message, timeout);
+        answers = c.establish_connection(true, false);
+
+        if (answers[0].size() > 0) {
+            if (answers[0][0].size() > 0) {
+                answers[0][0][0].pop_back();
+                answers[0][0][0] += ".";
+                answers[0][0][2].pop_back();
+                answers[0][0][2] += ".";
+                cout << answers[0][0][0] << " IN " << answers[0][0][1] << " " << answers[0][0][2] << endl;
+                main_server = answers[0][0][2];
+            };
+        }
+        main_server.pop_back();
+        answers.clear();
+
+        BIT_DNS_QUERY q2(true, "A", main_server);
+        Client c2(server, q2.final_message, timeout);
+        answers = c2.establish_connection(true, true);
+
+        if (answers[0].size() > 0) {
+            if (answers[0][0].size() > 0) {
+                main_server_ip = answers[0][0][2];
+            };
+        }
+        answers[0].clear();
+        root_name = server;
+        root_ip = main_server_ip;
+    } else {
+        server = root_name;
+        main_server_ip = root_ip;
+        vector<vector<string > > aa;
+        answers.push_back(aa);
     }
-    //under_server.pop_back();
-    //cout << "FOUND MAIN_SERVER_IP " << main_server_ip << endl;
-    answers[0].clear();
 
     while (answers[0].size() == 0) {
 
         answers.clear();
-        BIT_DNS_QUERY q3(true, "NS", name);
-        Client c3(main_server_ip, q3.final_message);
-        answers = c3.establish_connection(true, false);
+        if (type != "PTR") {
+            BIT_DNS_QUERY q3(true, "NS", name);
+            Client c3(main_server_ip, q3.final_message, timeout);
+            answers = c3.establish_connection(true, false);
+        } else {
+            BIT_DNS_QUERY q3(true, "PTR", name);
+            Client c3(main_server_ip, q3.final_message, timeout);
+            answers = c3.establish_connection(true, false);
+        }
 
         string server = "";
-        if (answers[1].size()>0) {
-            if (answers[1][0].size() > 0) {
-                answers[1][0][0].pop_back();
-                answers[1][0][0] += ".";
-                answers[1][0][2].pop_back();
-                answers[1][0][2] += ".";
-                cout << answers[1][0][0] << " IN " << answers[1][0][1] << " " << answers[1][0][2] << endl;
-                server = answers[1][0][2];
-            };
+        for (int i = 0; i<answers[1].size(); i++) {
+            if (answers[1][i][0] != server) {
+                answers[1][i][0].pop_back();
+                answers[1][i][0] += ".";
+                answers[1][i][2].pop_back();
+                answers[1][i][2] += ".";
+                if (answers[1][i][1] == "A")
+                    cout << answers[1][i][0] << ". IN " << answers[1][i][1] << " " << answers[1][i][2] << endl;
+                else
+                    cout << answers[1][i][0] << " IN " << answers[1][i][1] << " " << answers[1][i][2] << endl;
+                server = answers[1][i][2];
+                break;
+            }
         }
         server.pop_back();
-        //cout << "FOUND SERVER: " << server << endl;
 
-        for (int i=0; i<answers[2].size(); i++) {
-            answers[2][0][0].pop_back();
-            if (server == answers[2][0][0]) {
-                answers[2][0][2].pop_back();
-                cout << answers[2][0][0] << " IN " << answers[2][0][1] << " " << answers[2][0][2] << endl;
-                main_server_ip = answers[2][0][2];
-                break;
-            };
+        if (dns_cache.find(server) == dns_cache.end()) {
+            bool found = false;
+            for (int i = 0; i < answers[2].size(); i++) {
+                answers[2][i][0].pop_back();
+                dns_cache.insert(pair<string,string>(answers[2][i][0], answers[2][i][2]));
+                if (server == answers[2][i][0]) {
+                    found = true;
+                    answers[2][i][2].pop_back();
+                    if (answers[2][i][1] == "A")
+                        cout << answers[2][i][0] << ". IN " << answers[2][i][1] << " " << answers[2][i][2] << endl;
+                    else
+                        cout << answers[2][i][0] << " IN " << answers[2][i][1] << " " << answers[2][i][2] << endl;
+                    main_server_ip = answers[2][i][2];
+                    break;
+                };
+            }
+            if (found == false) {
+                main_server_ip = iterative_search("A", server, main_server_ip, 5);
+                dns_cache.insert(pair<string,string>(server, main_server_ip));
+            }
         }
-        //cout << "FOUND SERVER_IP " << main_server_ip << endl;
+        else {
+            main_server_ip = dns_cache.find(server)->second;
+        }
         answers.clear();
 
         BIT_DNS_QUERY q8(true, type, name);
-        Client c8(main_server_ip, q8.final_message);
+        Client c8(main_server_ip, q8.final_message, timeout);
         answers = c8.establish_connection(true, false);
     }
-    answers[0][0][0].pop_back();
-    answers[0][0][0] += ".";
-    answers[0][0][2].pop_back();
-    cout << answers[0][0][0] << " IN " << answers[0][0][1] << " " << answers[0][0][2] << endl;
-
-    /*
-    //string ip = "192.58.128.30";
-    BIT_DNS_QUERY q3(true, "NS", name);
-    Client c3(under_server_ip, q3.final_message);
-    answers = c3.establish_connection(true);
-
-
-    /*
-    //TODO ziskaj
-    //TODO toto bude v cykle dokym sa to nenajde
-    string auth = "a.ns.nic.cz.";
-    string auth_ip = "194.0.12.1";
-    BIT_DNS_QUERY q4(true, "NS", name);
-    Client d3(auth_ip, q4.final_message);
-    d3.establish_connection(true);
-    */
+    if (type != "AAAA") {
+        answers[0][0][0].pop_back();
+        answers[0][0][0] += ".";
+        answers[0][0][2].pop_back();
+    }
+    if (type == "PTR")
+        cout << answers[0][0][0] << " IN " << answers[0][0][1] << " " << answers[0][0][2] << "." << endl;
+    else if (type == "AAAA") {
+        cout << answers[0][0][0] << ". IN " << answers[0][0][1] << " " << answers[0][0][2]  << endl;
+    }
+    else
+        cout << answers[0][0][0] << " IN " << answers[0][0][1] << " " << answers[0][0][2] << endl;
+    return answers[0][0][2];
 }
 
 
-//hlavny program
+//main program
 int main(int argc, char *argv[]) {
-    string server = "";
-    string name = "";
-    string type = "A";
-    bool iterative = false;
-    int timeout = 5;
-    check_params(argc, argv, &server, &timeout, &type, &iterative, &name);
+    try {
+        string server = "";
+        string name = "";
+        string type = "A";
+        bool iterative = false;
+        int timeout = 5;
+        check_params(argc, argv, &server, &timeout, &type, &iterative, &name);
 
-    //DNS_QUERY new_query(type, iterative, name);
-    //new_query.to_string();
-    //new_query.send_query();
-    if (!iterative) {
-        BIT_DNS_QUERY q(iterative, type, name);
-        Client c(server, q.final_message);
-        c.establish_connection(iterative, true);
-    } else {
-        iterative_search(type, name, server);
+        if (!iterative) {
+            BIT_DNS_QUERY q(iterative, type, name);
+            Client c(server, q.final_message, timeout);
+            vector<vector<vector <string> > > resp  = c.establish_connection(iterative, true);
+            return ret;
+        } else {
+            iterative_search(type, name, server, timeout);
+        }
+    } catch (...) {
+        exit(RUNTIME_ERROR);
     }
-
-
-    //Client client = Client(port, host, opt, login);
-    //client.establish_connection();
     return 0;
 }
 
 
-//kontrola parametrov
+//params check
 void check_params(int argc, char *argv[], string *server, int *timeout, string *type, bool *iter, string *name) {
     int arg;
     bool server_set = false, timeout_set = false, type_set = false, iter_set = false, login_set = false, help_set = false;
@@ -684,6 +729,9 @@ void check_params(int argc, char *argv[], string *server, int *timeout, string *
             case 't':
                 if (optarg && !type_set) {
                     *type = optarg;
+                    if (type_to_int.find(*type) == type_to_int.end()) {
+                        exit(ERROR);
+                    }
                     type_set = true;
                 } else {
                     cerr << "Please check -t option, arg_error" << endl;
