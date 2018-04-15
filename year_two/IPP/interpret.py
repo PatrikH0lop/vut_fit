@@ -278,7 +278,6 @@ class Interpret:
                     return False
             elif _type == 'string':
                 return text
-                #TODO
             elif _type == 'float':
                 return float.fromhex(text)
         except ValueError:
@@ -295,6 +294,8 @@ class Interpret:
                 ErrorManagement.raise_error("not_defined", "Not existing variable")
             if value.attrib['type'] == 'var':
                 l_frame, l_name = value.text.split('@')
+                if self.frames[l_frame][-1][l_name] is None:
+                    ErrorManagement.raise_error("missing_value", "Missing value in variable")
                 self.frames[var_frame][-1][var_name] = self.frames[l_frame][-1][l_name]
             else:
                 self.frames[var_frame][-1][var_name] = self.detype_value(value.attrib['type'], value.text)
@@ -331,8 +332,8 @@ class Interpret:
         frame, name = var.text.split('@')
         try:
             if name in self.frames[frame][-1]:
-                ErrorManagement.raise_error("frame_not_exists", "Error, redefining variable")
-            self.frames[frame][-1][name] = 0
+                ErrorManagement.raise_error("semantics", "Error, redefining variable")
+            self.frames[frame][-1][name] = None
         except (TypeError, IndexError) as e:
             ErrorManagement.raise_error("frame_not_exists", "Error while creating new variable")
 
@@ -361,6 +362,8 @@ class Interpret:
         try:
             if value.attrib['type'] == 'var':
                 l_frame, l_name = value.text.split('@')
+                if self.frames[l_frame][-1][l_name] is None:
+                    ErrorManagement.raise_error("missing_value", "Missing value in variable")
                 self.data_stack.append(self.frames[l_frame][-1][l_name])
             else:
                 to_push = self.detype_value(value.attrib['type'], value.text)
@@ -380,6 +383,8 @@ class Interpret:
                 value = self.data_stack.pop()
             except IndexError:
                 ErrorManagement.raise_error("missing_value", "Pop from empty stack!")
+            if name not in self.frames[frame][-1]:
+                ErrorManagement.raise_error("not_defined", "Variable does not exists!")
             self.frames[frame][-1][name] = value
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -428,6 +433,8 @@ class Interpret:
             value_first, value_second = self.arithmetic_precheck(value1, value2)
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first + value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -445,6 +452,8 @@ class Interpret:
             value_first, value_second = self.arithmetic_precheck(value1, value2)
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first - value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -462,6 +471,8 @@ class Interpret:
             value_first, value_second = self.arithmetic_precheck(value1, value2)
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first * value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -481,6 +492,8 @@ class Interpret:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
             if value_second == 0:
                 ErrorManagement.raise_error("zero_division", "Division by zero")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first // value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -544,6 +557,8 @@ class Interpret:
         value = input()
         try:
             value = self.detype_value(_type.text, value)
+            if name not in self.frames[frame][-1]:
+                ErrorManagement.raise_error("not_defined", "Variable is not defined!")
             self.frames[frame][-1][name] = value
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -559,7 +574,7 @@ class Interpret:
         self.check_arguments(instruction, ["label"])
         name = instruction[0]
         if name.text in self.labels:
-            ErrorManagement.raise_error("missing_value", "Redefinition of label")
+            ErrorManagement.raise_error("semantics", "Redefinition of label")
         self.labels[name.text] = self.pc
 
     def i_jump(self, instruction):
@@ -569,7 +584,7 @@ class Interpret:
         try:
             self.pc = self.labels[name.text]
         except KeyError:
-            ErrorManagement.raise_error("not_defined", "Label does not exist!")
+            ErrorManagement.raise_error("semantics", "Label does not exist!")
 
     def logical_precheck(self, value1, value2):
         """Performs arithmetic precheck
@@ -619,12 +634,14 @@ class Interpret:
         value1 = instruction[1]
         value2 = instruction[2]
         value_first, value_second = self.logical_precheck(value1, value2)
+        if value_first is None or value_second is None:
+            ErrorManagement.raise_error("missing_value", "Missing value in variable!")
         result = value_first == value_second
         try:
             if result == False:
                 self.pc = self.labels[var.text]
         except KeyError:
-            ErrorManagement.raise_error("not_defined", "Label does not exist!")
+            ErrorManagement.raise_error("semantics", "Label does not exist!")
 
     def i_jumpifeq(self, instruction):
         """Jumps to given label if values are equal"""
@@ -633,12 +650,14 @@ class Interpret:
         value1 = instruction[1]
         value2 = instruction[2]
         value_first, value_second = self.logical_precheck(value1, value2)
+        if value_first is None or value_second is None:
+            ErrorManagement.raise_error("missing_value", "Missing value in variable!")
         result = value_first == value_second
         try:
             if result == True:
                 self.pc = self.labels[var.text]
         except KeyError:
-            ErrorManagement.raise_error("not_defined", "Label does not exist!")
+            ErrorManagement.raise_error("semantics", "Label does not exist!")
 
     def i_dprint(self, instruction):
         """Writes symbol to standart output"""
@@ -672,6 +691,8 @@ class Interpret:
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
             value_first, value_second = self.logical_precheck(value1, value2)
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first < value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -692,6 +713,8 @@ class Interpret:
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
             value_first, value_second = self.logical_precheck(value1, value2)
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first > value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -712,6 +735,8 @@ class Interpret:
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
             value_first, value_second = self.logical_precheck(value1, value2)
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first == value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -761,6 +786,8 @@ class Interpret:
             value_first, value_second = self.boolean_precheck(value1, value2)
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first and value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -777,6 +804,8 @@ class Interpret:
             value_first, value_second = self.boolean_precheck(value1, value2)
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = value_first or value_second
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -804,6 +833,8 @@ class Interpret:
                 ErrorManagement.raise_error("operand", "Expected boolean value!")
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = not value_first
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -828,6 +859,8 @@ class Interpret:
                 ErrorManagement.raise_error("operand", "Wrong variable type!")
             if name not in self.frames[frame][-1]:
                 ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             self.frames[frame][-1][name] = chr(value_first)
         except (TypeError, IndexError):
             ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
@@ -858,6 +891,8 @@ class Interpret:
                 value_second = self.frames[lframe][-1][lname]
             else:
                 ErrorManagement.raise_error("operand", "Wrong operand type")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             try:
                 value = ord(value_first[value_second])
             except IndexError:
@@ -874,12 +909,56 @@ class Interpret:
 
 
     def i_float2int(self, instruction):
-        """TODO"""
-        pass
+        """Converts float to integer"""
+        self.check_arguments(instruction, ["var", "symb"])
+        var = instruction[0]
+        value1 = instruction[1]
+        frame, name = var.text.split('@')
+        try:
+            if value1.attrib['type'] == 'float':
+                value_first = int(value1.text)
+            elif value1.attrib['type'] == 'var':
+                lframe, lname = value1.text.split('@')
+                value_first = int(self.frames[lframe][-1][lname])
+            else:
+                ErrorManagement.raise_error("operand", "Wrong variable type!")
+            if name not in self.frames[frame][-1]:
+                ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
+            self.frames[frame][-1][name] = value_first
+        except (TypeError, IndexError):
+            ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
+        except KeyError:
+            ErrorManagement.raise_error("not_defined", "Variable does not exist!")
+        except ValueError:
+            ErrorManagement.raise_error("operand", "Wrong variable type!")
 
     def i_int2float(self, instruction):
-        """TODO"""
-        pass
+        """Converts integer to float"""
+        self.check_arguments(instruction, ["var", "symb"])
+        var = instruction[0]
+        value1 = instruction[1]
+        frame, name = var.text.split('@')
+        try:
+            if value1.attrib['type'] == 'float':
+                value_first = int(value1.text)
+            elif value1.attrib['type'] == 'var':
+                lframe, lname = value1.text.split('@')
+                value_first = float(self.frames[lframe][-1][lname])
+            else:
+                ErrorManagement.raise_error("operand", "Wrong variable type!")
+            if name not in self.frames[frame][-1]:
+                ErrorManagement.raise_error("not_defined", "Variable does not exists!")
+            if value_first is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
+            self.frames[frame][-1][name] = value_first
+        except (TypeError, IndexError):
+            ErrorManagement.raise_error("frame_not_exists", "Frame does not exist!")
+        except KeyError:
+            ErrorManagement.raise_error("not_defined", "Variable does not exist!")
+        except ValueError:
+            ErrorManagement.raise_error("operand", "Wrong variable type!")
 
     def i_concat(self, instruction):
         """Concatenates 2 string values"""
@@ -903,6 +982,8 @@ class Interpret:
                 value_second = self.frames[lframe][-1][lname]
             else:
                 ErrorManagement.raise_error("operand", "Wrong variable type")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             try:
                 final_value = value_first + value_second
             except TypeError:
@@ -930,6 +1011,8 @@ class Interpret:
                 value_first = self.frames[lframe][-1][lname]
             else:
                 ErrorManagement.raise_error("operand", "Wrong operand type")
+            if value_first is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             try:
                 length = len(value_first)
             except TypeError:
@@ -964,6 +1047,8 @@ class Interpret:
                 value_second = self.frames[lframe][-1][lname]
             else:
                 ErrorManagement.raise_error("operand", "Wrong operand type")
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             try:
                 value = value_first[value_second]
             except IndexError:
@@ -1001,6 +1086,8 @@ class Interpret:
             else:
                 ErrorManagement.raise_error("operand", "Wrong operand type")
             string = list(self.frames[frame][-1][name])
+            if value_first is None or value_second is None:
+                ErrorManagement.raise_error("missing_value", "Missing value in variable!")
             try:
                 string[value_first] = value_second[0]
             except IndexError:
