@@ -1,40 +1,55 @@
-<?xml version="1.0"?>
-<project name="BlockSimulator" basedir=".">
+<project name="BlockEditor-IJA" default="all" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <property name="src.dir" value="src"/>
+    <property name="build.classes.dir" value="build"/>
+    <property name="build.jar.dir" value="dest-client"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="doc.dir" value="doc"/>
 
-    <property name="src.dir" location="./src/" />
-    <property name="build.dir" location="./build/" />
-    <property name="dest.dir" location="./dest-client" />
-
-
-    <path id="junit.class.path">
-        <pathelement location="lib/junit-4.12.jar" />
-        <pathelement location="lib/hamcrest-core-1.3.jar" />
-        <pathelement location="${build.dir}" />
-    </path>
-
-
-    <target name="compile">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
-            <classpath refid="junit.class.path" />
-        </javac>
-        <jar destfile = "${dest.dir}/ija-client.jar"
-             basedir = "${build.dir}"
-        />
+    <target name="all" depends="run">
+        <description>Main target</description>
     </target>
 
-
     <target name="run">
-        <junit printsummary="on" fork="true" haltonfailure="yes">
-            <classpath refid="junit.class.path" />
-            <classpath>
-                <pathelement location="${build.dir}"/>
-            </classpath>
-            <batchtest>
-                <fileset dir="${src.dir}">
-                    <include name="**/*Test*.java" />
-                </fileset>
-            </batchtest>
-        </junit>
+        <java jar="${build.jar.dir}/ija-client.jar" fork="true"/>
+    </target>
+
+    <target name="compile" depends="clean,doc">
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.jar.dir}"/>
+        <mkdir dir="${doc.dir}"/>
+        <copydir src="${src.dir}/data" dest="${build.classes.dir}/data"/>
+        <javac includeantruntime="false"
+               srcdir="${src.dir}"
+               destdir="${build.classes.dir}"
+               fork="yes"
+               executable="javac"
+               source="1.8"
+               debug="on">
+        </javac>
+
+        <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant"
+                 classpath="lib/ant-javafx.jar"/>
+        <fx:application id="BlockEditor" name="JavaFXEditor" mainClass="main_r.Main"/>
+        <fx:resources id="appRes">
+            <fx:fileset dir="${build.jar.dir}" includes="ija-client.jar"/>
+        </fx:resources>
+        <fx:jar destfile="${build.jar.dir}/ija-client.jar">
+            <fx:application refid="BlockEditor"/>
+            <fx:resources refid="appRes"/>
+            <fileset dir="${build.classes.dir}"/>
+        </fx:jar>
+    </target>
+
+    <target name="doc">
+        <javadoc packagenames="*" sourcepath="${src.dir}" destdir="doc" version="true" windowtitle="Block Editor - IJA">
+            <doctitle><![CDATA[Solitaire]]></doctitle>
+        </javadoc>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.classes.dir}"/>
+        <delete dir="${build.jar.dir}"/>
+        <delete dir="${doc.dir}"/>
     </target>
 
 </project>
