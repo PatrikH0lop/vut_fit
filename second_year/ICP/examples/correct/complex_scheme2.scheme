@@ -1,0 +1,46 @@
+19
+0 Company -460,000000 -249,000000
+average_salary 20,000000 stock_number 30,000000 stock_value 50,000000 
+2 Company -464,000000 -159,000000
+average_salary 10,000000 stock_number 80,000000 stock_value 50,000000 
+19 PowerPlant -311,000000 -363,000000
+distributed_energy 40,000000 reactor_temperature 50,000000 risk_probability 0,800000
+20 PowerPlant -314,000000 -283,000000
+distributed_energy 40,000000 reactor_temperature 50,000000 risk_probability 0,400000
+21 BetterPlant -209,000000 -313,000000
+1 CompanyMerge -367,000000 -193,000000
+22 ReactorCooler -103,000000 -297,000000
+23 PowerPlantResult 9,000000 -245,000000
+24 Constant -206,000000 -252,000000
+value 10,000000 
+25 Evaluator -260,000000 -193,000000
+26 Subtractor -128,000000 -179,000000
+27 Result -21,000000 -178,000000
+28 CommonRisk -197,000000 -380,000000
+29 PowerPlantResult 20,000000 -366,000000
+30 Result -82,000000 -380,000000
+31 Company -372,000000 -96,000000
+average_salary 60,000000 stock_number 50,000000 stock_value 10,000000 
+32 CompanyMerge -257,000000 -128,000000
+33 PowerPlantResult 19,000000 -308,000000
+34 ResultCompany -131,000000 -94,000000
+19
+0 PortC 1 PortA
+2 PortC 1 PortB
+19 PortC 21 PortA
+20 PortC 21 PortB
+21 PortC 22 PortA
+22 PortC 23 PortC
+24 PortC 22 PortB
+1 PortC 25 PortA
+25 PortC 26 PortA
+24 PortC 26 PortB
+26 PortC 27 PortC
+19 PortC 28 PortA
+20 PortC 28 PortB
+22 PortC 29 PortC
+28 PortC 30 PortC
+1 PortC 32 PortA
+31 PortC 32 PortB
+22 PortC 33 PortC
+32 PortC 34 PortC

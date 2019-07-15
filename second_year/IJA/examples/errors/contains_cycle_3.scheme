@@ -1,0 +1,24 @@
+9
+4.0 Constant 96.0 64.0
+value 18.0 
+5.0 Constant 96.0 128.0
+value 16.0 
+6.0 Constant 96.0 224.0
+value 30.0 
+7.0 Adder 352.0 128.0
+8.0 Adder 224.0 96.0
+9.0 Divider 448.0 160.0
+10.0 Multiplier 224.0 256.0
+11.0 Constant 128.0 320.0
+value 10.0 
+12.0 Adder 352.0 256.0
+9
+5.0 PortC 8.0 PortB
+4.0 PortC 8.0 PortA
+8.0 PortC 7.0 PortA
+7.0 PortC 9.0 PortA
+6.0 PortC 10.0 PortA
+11.0 PortC 10.0 PortB
+10.0 PortC 12.0 PortA
+9.0 PortC 12.0 PortB
+12.0 PortC 9.0 PortB

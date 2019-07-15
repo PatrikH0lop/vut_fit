@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>The Daily Dose of IETF</title><link href="https://tools.ietf.org/dailydose/" /><link href="https://tools.ietf.org/dailydose/dailydose_atom.xml" rel="self" /><id>https://tools.ietf.org/dailydose/</id><author><name>Daily Dose</name></author><updated>2018-11-09T05:00:15Z</updated>
+
+<entry><title>The Daily Dose of IETF - Issue 3230 - 2018-11-09</title><id>https://tools.ietf.org/dailydose/3230.html</id><link href="https://tools.ietf.org/dailydose/3230.html" /><updated>2018-11-09T05:00:15Z</updated></entry>
+
+<entry><author><name>entry_author</name></author><title>The Daily Dose of IETF - Issue 3229 - 2018-11-08</title><id>https://tools.ietf.org/dailydose/3229.html</id><link href="https://tools.ietf.org/dailydose/3229.html" /><updated>2018-11-08T05:00:28Z</updated></entry>
+
+<entry><source><author><name>source_author</name></author></source><title>The Daily Dose of IETF - Issue 3228 - 2018-11-07</title><id>https://tools.ietf.org/dailydose/3228.html</id><link href="https://tools.ietf.org/dailydose/3228.html" /><updated>2018-11-07T05:00:15Z</updated></entry>
+
+<entry><title>The Daily Dose of IETF - Issue 3212 - 2018-10-16</title><id>https://tools.ietf.org/dailydose/3212.html</id><link href="https://tools.ietf.org/dailydose/3212.html" /><updated>2018-10-16T05:00:15Z</updated></entry>
+
+<entry><author><name>multiple_entry_author</name></author><author><name>multiple_entry_author</name></author><title>The Daily Dose of IETF - Issue 3211 - 2018-10-15</title><id>https://tools.ietf.org/dailydose/3211.html</id><link href="https://tools.ietf.org/dailydose/3211.html" /><updated>2018-10-15T05:00:16Z</updated></entry></feed>

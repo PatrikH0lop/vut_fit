@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/adder.png</file>
+        <file>data/betterplant.png</file>
+        <file>data/commonrisk.png</file>
+        <file>data/company.png</file>
+        <file>data/company_result.png</file>
+        <file>data/cooler.png</file>
+        <file>data/cursor_active.png</file>
+        <file>data/divider.png</file>
+        <file>data/empty.png</file>
+        <file>data/evaluator.png</file>
+        <file>data/multiplier.png</file>
+        <file>data/pin_over.png</file>
+        <file>data/pin_pressed.png</file>
+        <file>data/powerplant.png</file>
+        <file>data/powerplant_result.png</file>
+        <file>data/result.png</file>
+        <file>data/subtractor.png</file>
+        <file>data/var.png</file>
+        <file>data/company_merge.png</file>
+    </qresource>
+</RCC>

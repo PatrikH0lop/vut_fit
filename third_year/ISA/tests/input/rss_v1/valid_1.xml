@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel rdf:about="https://web.nvd.nist.gov/view/vuln/search">
+    <title>National Vulnerability Database</title>
+    <link>https://web.nvd.nist.gov/view/vuln/search</link>
+    <description>This feed contains the most recent CVE cyber vulnerabilities published within the National Vulnerability Database.</description>
+    <items>
+      <rdf:Seq>
+        <rdf:li rdf:resource="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5361" />
+        <rdf:li rdf:resource="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5362" />
+        <rdf:li rdf:resource="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5501" />
+        <rdf:li rdf:resource="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2018-9516" />
+      </rdf:Seq>
+    </items>
+    <dc:date>2018-11-11T11:00:10Z</dc:date>
+    <dc:language>en-us</dc:language>
+    <dc:rights>This material is not copywritten and may be freely used, however, attribution is requested.</dc:rights>
+  </channel>
+  <item rdf:about="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5361">
+    <title>CVE-2008-5361 (air, flash_player)</title>
+    <link>https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5361</link>
+    <description>The ActionScript 2 virtual machine in Adobe Flash Player 10.x before 10.0.12.36 and 9.x before 9.0.151.0, and Adobe AIR before 1.5, does not verify a member element's size when performing (1) DefineConstantPool, (2) ActionJump, (3) ActionPush, (4) ActionTry, and unspecified other actions, which allows remote attackers to read sensitive data from process memory via a crafted PDF file.</description>
+    <dc:date>2008-12-08T11:30:00Z</dc:date>
+  </item>
+  <item rdf:about="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5362">
+    <title>CVE-2008-5362 (air, flash_player)</title>
+    <link>https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5362</link>
+    <description>The DefineConstantPool action in the ActionScript 2 virtual machine in Adobe Flash Player 10.x before 10.0.12.36 and 9.x before 9.0.151.0, and Adobe AIR before 1.5, accepts an untrusted input value for a &amp;quot;constant count,&amp;quot; which allows remote attackers to read sensitive data from process memory via a crafted PDF file.</description>
+    <dc:date>2008-12-08T11:30:06Z</dc:date>
+  </item>
+  <item rdf:about="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5501">
+    <title>CVE-2008-5501 (firefox, seamonkey, ubuntu_linux)</title>
+    <link>https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2008-5501</link>
+    <description>The layout engine in Mozilla Firefox 3.x before 3.0.5, Thunderbird 2.x before 2.0.0.19, and SeaMonkey 1.x before 1.1.14 allows remote attackers to cause a denial of service via vectors that trigger an assertion failure.</description>
+    <dc:date>2008-12-17T23:30:00Z</dc:date>
+  </item>
+  <item rdf:about="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2018-9516">
+    <title>CVE-2018-9516</title>
+    <link>https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2018-9516</link>
+    <description>In hid_debug_events_read of drivers/hid/hid-debug.c, there is a possible out of bounds write due to a missing bounds check. This could lead to local escalation of privilege with System execution privileges needed. User interaction is not needed for exploitation. Product: Android Versions: Android kernel Android ID: A-71361580.</description>
+    <dc:date>2018-11-06T17:29:01Z</dc:date>
+    <dc:creator>TestAutor</dc:creator>
+  </item>
+</rdf:RDF>

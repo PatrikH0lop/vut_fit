@@ -1,0 +1,19 @@
+7
+0 Constant -253,000000 -201,000000
+value 50,000000 
+1 Constant -250,000000 -126,000000
+value 10,000000 
+2 Adder -147,000000 -159,000000
+3 Subtractor 29,000000 -64,000000
+4 Adder -35,000000 -143,000000
+5 Constant -137,000000 -48,000000
+value 10,000000 
+6 Result 83,000000 -142,000000
+7
+0 PortC 2 PortA
+1 PortC 2 PortB
+2 PortC 4 PortA
+4 PortC 3 PortA
+3 PortC 4 PortB
+5 PortC 3 PortB
+4 PortC 6 PortC

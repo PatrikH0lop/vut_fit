@@ -1,0 +1,19 @@
+8
+13.0 Constant 120.0 120.0
+value 50.0 
+14.0 Constant 120.0 200.0
+value 50.0 
+15.0 Subtractor 240.0 160.0
+16.0 Adder 320.0 200.0
+17.0 Result 440.0 200.0
+18.0 Subtractor 240.0 320.0
+19.0 Result 360.0 320.0
+20.0 Constant 120.0 280.0
+value 40.0 
+6
+13.0 PortC 15.0 PortA
+14.0 PortC 15.0 PortB
+15.0 PortC 16.0 PortA
+16.0 PortC 17.0 PortA
+18.0 PortC 19.0 PortA
+20.0 PortC 18.0 PortA

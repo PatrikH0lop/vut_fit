@@ -1,0 +1,18 @@
+7
+30.0 Powerplant 80.0 40.0
+distributed_energy 600.0 reactor_temperature 600.0 risk_probability 0.8 
+31.0 CommonRiskEstimator 200.0 80.0
+33.0 Result 440.0 160.0
+34.0 Adder 320.0 160.0
+35.0 Powerplant 80.0 240.0
+distributed_energy 3000.0 reactor_temperature 600.0 risk_probability 0.9 
+36.0 CommonRiskEstimator 200.0 200.0
+38.0 Powerplant 80.0 160.0
+distributed_energy 3000.0 reactor_temperature 300.0 risk_probability 0.85 
+6
+30.0 PortC 31.0 PortA
+31.0 PortC 34.0 PortA
+34.0 PortC 33.0 PortA
+36.0 PortC 34.0 PortB
+38.0 PortC 36.0 PortA
+35.0 PortC 36.0 PortB

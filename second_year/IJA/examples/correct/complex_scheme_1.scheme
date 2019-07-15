@@ -1,0 +1,39 @@
+16
+54.0 Company 80.0 40.0
+stock_number 10.0 average_salary 20000.0 stock_value 20.0 
+55.0 Company 80.0 120.0
+stock_number 50.0 average_salary 40000.0 stock_value 506.0 
+56.0 MergeCompany 200.0 80.0
+57.0 Powerplant 80.0 200.0
+distributed_energy 1000.0 reactor_temperature 100.0 risk_probability 1.0 
+58.0 Powerplant 80.0 280.0
+distributed_energy 3040.0 reactor_temperature 300.0 risk_probability 0.4 
+59.0 BetterPlant 200.0 240.0
+60.0 Powerplant 200.0 320.0
+distributed_energy 500.0 reactor_temperature 500.0 risk_probability 0.5 
+61.0 BetterPlant 320.0 280.0
+62.0 ReactorCooler 440.0 320.0
+63.0 Constant 320.0 360.0
+value 200.0 
+65.0 PowerplantResult 560.0 320.0
+66.0 Company 240.0 160.0
+stock_number 10.0 average_salary 6000.0 stock_value 600.0 
+67.0 MergeCompany 360.0 120.0
+68.0 Evaluator 480.0 120.0
+69.0 Result 600.0 120.0
+70.0 CompanyResult 480.0 40.0
+14
+54.0 PortC 56.0 PortA
+55.0 PortC 56.0 PortB
+57.0 PortC 59.0 PortA
+58.0 PortC 59.0 PortB
+59.0 PortC 61.0 PortA
+60.0 PortC 61.0 PortB
+61.0 PortC 62.0 PortA
+63.0 PortC 62.0 PortB
+62.0 PortC 65.0 PortC
+56.0 PortC 67.0 PortA
+66.0 PortC 67.0 PortB
+67.0 PortC 68.0 PortA
+68.0 PortC 69.0 PortA
+67.0 PortC 70.0 PortC

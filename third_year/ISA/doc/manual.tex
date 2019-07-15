@@ -1,0 +1,295 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[left=2cm,text={17cm, 24cm},top=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}   
+\usepackage[T1]{fontenc}
+\usepackage[czech]{babel}
+\usepackage{times}
+
+\bibliographystyle{czechiso}
+
+
+\begin{document}
+
+\begin{titlepage}
+ \begin{center}
+ {
+  \Huge
+  \textsc{Vysoké učení technické v~Brně\\
+  \vspace{-2mm}
+  \huge
+  Fakulta informačních technologií}\\
+ }
+  \vspace{\stretch{0.382}}
+ {
+  \LARGE
+  Konfigurace a správa sítí\\
+ }
+  \vspace{-0.5mm}
+ {
+  \Huge
+  Čtečka novinek ve formátu Atom s podporou TLS\\
+ }
+  \vspace{\stretch{0.618}}
+ \end{center}
+{\Large 22.10.2018 \hfill Patrik Holop}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Úvod}
+
+\textit{Web Feed} je pojem označujúci dátový formát používaný na zverejňovanie informácií, ktoré sa často aktualizujú, napríklad spravodajské portály alebo blogy. Zhromažďovanie takýchto kolekcií sa nazýva agregácia. Web Feed umožňuje softvérovým programom sledovať zmeny publikované na stránke. Stránka aktualizuje zoznam novopublikovaných článkov v špecifickom formáte, ktorý sa po stiahnutí a spracovaní programom môže využiť, prípadne umožnuje užívateľom sa prihlásiť na odoberanie obsahu.
+
+Medzi najznámejšie formáty takýchto zoznamov patria \textit{Atom} a \textit{RSS}. Napriek tomu, že formát RSS vznikol ako prvý z nich, štandartizoval niekoľko verzií, ktoré sa významne líšia. Cieľom tohto projektu bolo naštudovať si informácie o daných formátoch a vytvoriť program, ktorý bude schopný spracovať takéto zdroje a prezentovať ich užívateľovi.
+
+\section{Teoretický podklad}
+
+Atom aj RSS štandarty vychádzajú z formátu XML, čo je značkovací jazyk definujúci sadu pravidiel na zakódovanie dokumentov, preto sú často súbory zakončované okrem prípon \textit{.atom} a \textit{.rss} i príponou \textit{.xml}. 
+
+\subsection{Formát Atom}
+\textit{The Atom Syndication Format} je definovaný pomocou \textit{RFC4287}.
+Formát Atom definuje zoznamy združených informácií ako \textit{Feeds} a jednotlivé položky v rámci zdroja sú nazývané \textit{entries}. Každá položka môže byť rozšírená o doplňujúce informácie (metadáta).
+
+Atom definuje 2 typy dokumentov, \textit{Atom Feed Document} a \textit{Atom Entry Document}.
+Rozdeľujú sa v tom, že Feed Document definuje zdroj obsahujúci viaceré položky a Entry Document obsahuje informácie o jedinej položke. Pretože tento projekt slúži na spracovanie zdrojov, spracovanie Entry Document nie je podporované.
+
+\subsubsection{Atom Feed Document}
+
+Každý dokument musí byť \textit{well-formed XML}, ale deklarácia XML v hlavičke dokumentu je nepovinná, takže s tým musí program počítať. 
+Koreňový element daného dokumentu musí byť \textit{atom:feed}. Tento typ elementu reprezentuje celý zdroj a slúži ako obálka pre zoznam \textit{atom:entry} elementov, ktoré popisujú jednotlivé články. Nemusí obsahovať žiaden takýto element.\\
+
+
+\noindent Medzi najdôležitejšie vlastnosti \textit{atom:feed} elementu patria:
+
+\noindent - \textit{title} reprezentuje názov \\
+- \textit{updated} - reprezentuje čas a dátum poslednej aktualizácie zdroja \\
+- \textit{author} - reprezentuje autora \\
+
+Zdroj má obsahovať práve jeden názov a čas zmeny, ale k autorovi sa viaže viac podmienok.
+
+Na reprezentovanie autora a obecne osôb definuje Atom vlastnú štruktúru  \textit{atomPersonConstruct}. Každá osoba musí mať zadané práve jedno meno a prípadne mail a URI spojované s danou osobou. V prípade elementu \textit{updated} je dátum a čas vo formáte ISO 8601. Položka môže obsahovať aj element \textit{published}, reprezentujúci publikovania danej položky.
+
+\subsubsection{Atom Entries}
+
+Každá položka je definovaná svojim názvom (element \textit{title}) a dobou aktualizácie (element \textit{updated}), ktoré majú rovnaký tvar ako v prípade Atom Feed Document, sú povinné a musia byť obsiahnuté práve raz.
+
+Položka môže obsahovať jedného alebo viacerých autorov. V prípade, že tomu tak nie je, môže obsahovať zdroj (element \textit{source}), ktorý má podobne ako osoby vlastnú štruktúru a môže obsahovať autorov. Až v prípade, kedy by ani jedna z týchto štruktúr nemala definovaných autorov sa považuje za autora položky autor zdroja definovaný v koreňovom \textit{atom:feed}  elemente. Toto poradie je definované v RFC a každý program, ktorý dané dokumenty spracováva, ho musí rešpektovať.
+
+Odkazy (element \textit{atom:link}) vo formáte Atom sú uložené ako atribúty daných elementov. Rozoznáva sa niekoľko typov takýchto odkazov, pričom typ odkazu značí hodnota atribútu \textit{rel} a hodnota odkazu je v atribúte \textit{href}. V prípade odkazov priamo na položky sú dôležité typy \textit{self}, ktorý značí odkaz priamo na danú položku a \textit{alternate}, ktorý označuje alternatívny zdroj informácií o danej položky. V prípade, že atribút \textit{rel} nie je určený, považuje sa daný odkaz za typ \textit{alternate}. Pretože formát Atom umožňuje aj odkazy typu \textit{sftp} a podobne, v programe je overované, či sa naozaj jedná o platnú adresu URL.
+
+\subsection{Formát RSS}
+
+Formát RSS (Really Simple Syndication) je naopak od formátu Atom zameraný na jednoduchosť s možnosťou jednoduchého rozšírenia. Bol navrhnutý ako formát popisujúci kanál obsahujúci jednotlivé položky. Jednotlivé elementy ako autor alebo dátum nereprezentujú zložené štruktúry ako pri formáte Atom, ale informácie sú uložené ako hodnota elementu. Odkazy pre formát RSS by mali obsahovať URL, ale niektoré zdroje toto pravidlo porušili, takže sa v programe overuje, či sa jedná o platnú URL adresu.
+
+\subsubsection{RSS 1.0}
+
+Podobne ako najstaršia verzia formátu RSS 0.9, ani verzia 1.0 sa v súčasnosti bežne nepoužíva, ale neustále ho niekoľko spravodajských portálov používa, preto daný projekt túto verziu podporuje. Formát RSS 1.0 bol navrhnutý spolu s XML vo formáte RDF (Thre Resource Description Framework), ktorý upravuje syntax XML pre popis zdrojov. RSS je 1.0 je spätne kompatibilný s verziou RSS 0.9*.
+
+Rovnako ako pri formáte Atom, ani v tomto formáte nie je deklarácia XML povinná, odporúča sa len pre spätnú kompatibilitu. Koreňovým elementom RSS 1.0 dokumentu je RDF element v tvare \textit{rdf:RDF}.\\
+
+Koreňový element obsahuje povinný element \textit{channel}, ktorý reprezentuje popisovaný kanál. Kanál musí mat zadaný \title{title} reprezentujúci názov a ďaľšie popisujúce metadáta o kanále, medzi najdôležitejšie patrí RDF tabuľka obsahu (element items), ktorý reprezentuje zoznam všetkých položiek popisovaných v danom dokumente.
+
+Ďalej môže koreňový element obsahovať aj ďalšie záznamy súvisiace v HTML vykresľovaním a štruktúrou daného kanálu, napr. obrázky alebo textové vstupy, ktoré nás v rámci tohoto projektu nezaujímavú.\\
+
+Jednotlivé položky vo formáte RSS sú nazývané \textit{item}. Každá položka má svoj názov (element \textit{title}), môže byť rozšírená o URL odkaz (element \textit{link}) a iné.
+Formát RSS 1.0 priamo nedefinuje formát autora ani formát času poslednej aktualizácie, viac v sekcii Rozšírenia.
+
+\subsubsection{RSS 2.0}
+
+Táto verzia už nevychádza z RDF, ale jednotlivé XML elementy sú adresované priamo.
+Vlastnosti má podobné ako formát RSS 1.0, upravuje ale podstatné vlasnosti dokumentu.
+
+Koreňový element je definovaný ako \textit{rss} s atribútom \textit{version="2.0"}
+Element \textit{channel} obsahuje metadáta, ale namiesto zoznamu položiek a ich dodatočnej definícii v rámci koreňového elementu obsahuje ich definície priamo. Taktiež môžu položky obsahovať informácie o autorovi pomocou elementu \textit{author}. Autor by mal byť podľa špecifikácie reprezentovaný jeho emailovou adresou. Pridal sa aj element \textit{pubDate}, ktorý upravuje formát času a dátumu publikovania danej položky. Elementy \textit{author} aj \textit{pubDate} sú voliteľné.
+
+\subsection{Moduly a rozšírenia}
+
+Formát RSS bol navrhnutý na jednoduché rozširovanie pomocou modulov. Najznámejší z nich je \textit{Dublin Core}. Dublic Core upravuje menný priestor tak, že umožnuje pridať nové elementy s predponou \textit{dc:}. Elementy, ktoré ovplyvňujú tento projekt, sú alternatívne značenie pre autora a dátum. Dublic Core je možné použiť aj ako rozšírenie pre formát Atom.
+
+Element \textit{dc:creator} je navrhnutý ako alternatíva pre RSS element \textit{author}, pokiaľ nemá byť zverejnená autorova e-mailová adresa ale napríklad uživateľské meno. \textit{Date} sa používa ako alternatíva k RSS elementu \textit{pubDate}.
+
+\subsection{Spojenie}
+
+V rámci tohto projektu sa získavajú zdrojové dokumenty pomocou aplikačného protokolu HTTP.
+Užívateľ zadá URL daného zdroja a pomocou HTTP GET požiadavku sa získa zdrojový
+súbor ako obsah odpovede.
+
+Pre tento účel sa pracuje s protokolom HTTP/1.1. Táto verzia HTTP protokolu je podporovaná na väčšine serverov a zároveň priniesla rýchlejšie spracovanie požiadavkov. Ďaľší dôvod, prečo sa nepoužíva staršia verzia HTTP/1.0 je ten, že z hľadiska budúcnosti sa môže stať zavrhnutou skôr ako verzia HTTP/1.1 a mnoho webových nástrojov používa ako východzí protokol HTTP/1.1.
+
+Pri HTTP/1.1 je potrebné riešiť možnosť rozdelenia správy na menšie celky (\textit{chunk}). To, či daná HTTP odpoveď využíva rozdelovanie na menšie celky, sa dá zistiť z HTTP hlavičky.
+V takom prípade je treba zo správy odstrániť informácie o veľkostiach nasledujúcich celkov.
+
+\subsubsection{HTTP}
+
+Na vytvorenie správneho požiadavku je nutné vytvoriť správnu HTTP požiadavku.
+Príklad HTTP požiadavky používanej v tomto projekte: 
+
+\begin{verbatim}
+GET /news/news-rss.php HTTP/1.1\r\n
+Host: www.fit.vutbr.cz\r\n
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 ...
+Connection: Close\r\n\r\n
+\end{verbatim}
+
+User-Agent je charakteristický reťazec, ktorý umožnuje identifikovať softvér a systém, ktorý požiadavku vytvoriť. Je nutné ho vložiť pre prístup k niektorých zdrojov. User-Agent používaný v tomto projekte je skopírovaný z prehliadača Mozzila Firefox.\\
+
+\noindent Východzí port pre HTTP komunikáciu je 80.
+
+\subsubsection{HTTPS a TLS}
+
+Protokol HTTPS umožňuje šifrované spojenie HTTP komunikácie pomocou vytvorenia SSL/TLS vrstvy, ktorá umožňuje danú komunikáciu šifrovať.
+
+Prvá fáza vytvorenia bezpečného spojenia sa nazýva \textit{SSL handshake}. Klient pošle požiadavku serveru, kde požaduje bezpečné pripojenie a priloží verziu SSL/TLS, ktorá by sa mala pri komunikácii používať, spolu s typom šifrovacieho a kompresného algoritmu. 
+Server odpovedá potvrdením požiadkov klienta a posiela klientovi certifikát. Certifikát slúži na overenie totožnosti serveru a obsahuje jeho verejný klúč. Server má právo po klientovi požadovať jeho overenie pomocou klientskeho certifikátu, ale sa to stáva vo výnimočných prípadoch.
+
+Druhá fáza spočíva vo výmene kľúčov. Klient vygeneruje tzv. Pre-Master Key a zašifruje ho pomocou verejného kľúča poskytnutého serverom a pošle ho serveru. V tomto kroku sa využíva asymetrické šifrovanie. Server daný kľúč dešifruje pomocou svojho privátneho kľúča.
+V predchodzích krokov si server a klient zároveň vymenili náhodnú postupnosť znakov, ktoré poslúžia spolu s Pre-Master Key na vygenerovanie nového kľúča nazývaného Master-Secret key.
+Túto hodnotu sú schopný klient aj server vygenerovať samostatne a bude slúžiť ako symetrický klúč počas celého spojenia.
+
+V poslednom kroku obe strany vegenerujú Change Cipher Spec správu, ktorá slúži na zmenu aktuálne používaneho šifrovania v rámci komunikácie. Po tomto kroku je celá komunikácia šifrovaná.\\
+
+Keď server posiela certifikát klientovi v prvej fázi, klient ho overí porovnaním voči dôveryhodným certifikátom. Užívateľ má právo zadať úložisko takýchto certifikátov prípadne priamo certifikačný súbor.\\
+
+\noindent Východzí port pre HTTPS komunikáciu je 443.
+
+
+\section{Implementácia}
+
+Tento projekt je implementovaný v jazyku C++. Využíva objektovo orientovaný návrh a je modulárny. Implementácia zachováva všetky vlastnosti formátov a spojení popísaných v teoretickej časti okrem kontroly povinných prvkov, aby bola podľa zadania robustná.
+
+\subsection{Spracovanie parametrov}
+
+Pri spracovaní parametrov program sa využíva funkciu \textit{getopt}.
+Každému možnému parametru je pridelená značka (flag typu bool), ktorý značí, či už bol parameter zadaný a umožňuje kontrolovať duplicitu.
+Je kontrolované, či užívateľ zadal feedfile alebo URL zdroja, a chyba nastane ak nebola zadaná žiadna z nich, prípadne obe. Kontroluje sa aj či užívateľ nezadal neplatný argument. Validita hodnôt argumentov sa kontroluje až pri pokuse o ich spracovanie. Je možné kombinovať parametre \textit{-c} a \textit{-C}. Hodnoty zadaných argumentov sa ukladajú do premenných typu string a posielajú na spracovanie.
+
+Funkcia \textit{getopt} podporuje zadávanie parametrov v kombinovanej forme, napr. \textit{-Tua}. Program podporuje vypísanie nápovedy pomocou parametru \textit{-h}. V prípade zadania parametru \textit{-h} sa všetky ostatné zadané parametre ignorujú.
+
+\subsection{Spojenie pomocou OpenSSL}
+
+Spojenie a sieťová komunikácia využíva knižnicu OpenSSL a implementácia využíva postup a funkcie zverejnený na oficiálnej stránke \footnote{https://developer.ibm.com/tutorials/l-openssl/}. Knižnica ponúka rozhranie BIO, ktoré slúži ako abstrakcia nad socketami a ich príslušnými funkciami.
+V tomto projekte abstrahuje prácu so spojením trieda \textit{ConnectionClient}, ktorá ponúka metódy na získanie obsahu dokumentu zo zadaného URL zdroja.
+
+Daná knižnica sa používa pri implementovaní bezpečnej i nezabezpečenej komunikácii projektu a je definovaná v súbore \textit{client.h}.
+
+Najprv sa skontroluje validita zadaného URL pomocou regulárneho výrazu, ktorý extrahuje \textit{hostname} a \textit{port}. Ak port nebol zadaný, nastaví sa ako východzia hodnota port 80 pre HTTP a 443 pre HTTPS.
+Vytvorí sa odkaz na štruktúru \textit{BIO}. Pomocou funkcie \textit{BIO\_new\_connect} sa vytvorí spojenie a \textit{BIO\_do\_connect} spojenie skontroluje. 
+
+Po vytvorení a overení spojenia musí klient poslať HTTP GET požiadavku, ktorú zostaví podľa popisu v teoretickej časti. Tá sa pomocou funkcie \textit{BIO\_write} pošle. Potom stačí v cykle načítať celú odpoveď HTTP serveru a uložiť ju v pamäti.
+
+V prípade zabezpečenej komunikácie sa v prípade, že užívateľ nezadal parameter \textit{-c} ani \textit{-C} použije funkcia \textit{SSL\_CTX\_set\_default\_verify\_paths}, ktorá nastaví úložisko certifikátov na východziu hodnotu. Implementácia tohto projektu predpokladá používanie zložiek, ktoré boli hashované pomocou príkazu c\_rehash. V opačnom prípade sa zadané hodnoty odovzdajú funkcii \textit{SSL\_CTX\_load\_verify\_locations}, ktorá sa pokúsi najprv aplikovať certifikačný súbor a následne zložku. Pred zahájením komunikácie je treba overiť certifikát pomocou funkcie \textit{SSL\_get\_verify\_result}.
+
+Ako bolo popísané v teoretickej časti, tento program pracuje s protokolom HTTP/1.1, takže je nutné skontrolovať správu, či neobsahuje rozde1ovanie na chunky. Oddelí sa hlavička správy a jej obsah. Ak rozdelovanie obsahuje, načíta sa hexadecimálne číslo N, ktorým obsah začíta a po N znakoch sa vyskytne daľšia číselná značka, ktorú je nutné odstrániť. Takto sa postupne odstraňujú (spolu s okolitými znakmi ukončenia riadku) až pokým sa nedostane k číslu 0, čo značí koniec správy. Takto spracovaný obsah správy reprezentuje XML dokument.
+
+\subsection{Spracovanie XML}
+
+Na spracovanie získaných dát (reťazec obsahujúci XML dokument) sa používa knižnica \textit{libxml2} \footnote{http://www.xmlsoft.org/html/index.html}.
+
+Tá nám umožnuje pomocou funkcie \textit{xmlParseMemory} načítať XML dokument z reťazca do štruktúry abstrahovanej danou knižnicou a zároveň skontrolovať platnosť formátu XML dokumentu. Ďalej sa pracuje s odkazom na koreňový element typu \textit{xmlNode}. Knižnica poskytuje funkcie na získanie atribútov a každý element obsahuje odkaz na jeho podelementy a súrodencov.
+
+Trieda \textit{ConnectionClient} poskytuje funkcie na spracovanie celého súboru obsahujúceho zdroje podľa pravidiel v teoretickej časti, stiahnutie obsahu jednotlivých zdrojov a extrahovanie informácií. Najprv sa získa podľa koreňového elementu informácia, s akým typom dokumentu sa pracuje. Podľa toho sa zavolajú funkcie pre spracovanie RSSv1, RSSv2 a Atom dokumentov.
+Cieľom funkcií je naplniť dáta tried \textit{AtomEntryInformation} \textit{RssItemInformation} definované v súbore \textit{information.h}.
+Tie obsahujú atribúty pre všetky informácie, ktoré je možné pre jednotlivé položky vyextrahovať. Ak je hodnota daného atribútu prázdny reťazec, predpokladá sa, že sa v položke / dokumente nenašiel.
+Triedy \textit{AtomItemInformationSummary} a \textit{RssItemInformationSummary} obsahujú informácie o všetkých položkách zo súboru, atribúty pre globálne informácie (napr. autor celého zdroja) a im definované metódy \textit{print\_info} obsahujú pravidlá, v akom poradí a ktoré informácie vypisovať podľa špecifikácie.
+
+
+\subsection{Prezentácia výsledkov}
+
+V súbore \textit{information.cpp} je definované poradie a pravidlá výpisu informácií podľa teoretickej časti. V prípade, že je obsah elementu \textit{title} určitej položky prázdne, vypíše sa reťazec \texttt{Empty title}. Autor, URL a dátum a čas sa vypíšu jedine v prípade, že dané informácie bolo možné získať.\\
+
+\noindent Dodatočné informácie sa vždy vypisujú v poradí: \\
+ 1. autor \\ 
+ 2. URL \\
+ 3. dátum a čas\\
+ 
+Ak daný dokument využíva rozšírenie \textit{Dublin Core}, informácie \textit{dc:creator} a \textit{dc:date} danej položiek \textit{item} alebo \textit{entry} majú prednosť pred globálnymi informáciami o celom zdroji, prípadne kanála, ako sú napríklad autor celého zdroja.
+
+\section{Testovanie}
+
+Na testovanie je využitý script \textit{test.sh} v zložke \textit{tests}, ktorý testuje nasledovné oblasti:\\
+ - spracovanie parametrov\\
+ - vytvorenie spojenia a stiahnutie dokumentu\\
+ - spracovanie formátu a výstup\\
+
+V rámci spracovania parametrov sa testujú platné i neplatné parametre, ich kombinácie a ich hodnoty.
+
+\noindent Vytvorenie spojenia sa testuje na nasledujúcich zdrojoch a očakáva sa, že budú pri testovaní dostupné. Testuje sa vytvorenie spojenia pri použití východzích i špecifikovaných portov, overenie pri použití neplatných certifikátov a podobne.\\
+- http://www.fit.vutbr.cz/news/news-rss.php\\
+- https://tools.ietf.org/dailydose/dailydose\_atom.xml\\
+
+
+
+Pretože by sa mohol obsah zdrojov časom meniť a nebolo by možné správne spracovanie testovať, na tento účel sú v archíve uložené zdroje a ich manuálne spracované výsledky. Program podporuje prepínač \textit{-p}, ktorý umožnuje načítať obsah XML dokumentu zo štandartného vstupu bez predchádzajúceho HTTP požiadavku. Stiahnuté testovacie zdroje boli vybrané a upravené tak, aby obsahovali čo najviac možností formátu položiek vo formátoch Atom a RSS. Zdroj formátu Atom napríklad obsahuje položky s viacerými autormi, s autorom zadaným v elemente \textit{source}, bez autora, aby sa musel použiť autor celého zdroja a podobne. Tieto zdroje sa spracujú programom a výstup sa porovná pomocou programu \texttt{diff} s uloženým očakávaným výstupom.
+
+Na konci testovania sa vypíše krátka štatistika o testoch.\\
+
+\noindent Testy je možné spustiť príkazom \textit{make test} v koreňovej zložke archívu. Testovanie vykonajte až po preklade programu pomocou príkazu \textit{make}.\\
+
+\noindent Pri správnom postupe by mal byť výstup testov nasledovný:
+{\tiny
+\begin{verbatim}
+eva ~/Dokumenty> make test
+sh ./tests/test.sh
+
+*** Test info ***
+You can find input files in tests/input/
+You can find manually parsed results in tests/results/
+
+*** Running tests ***
+
+ ** Parameters **
+  - No parameters (OK - finished with error)
+  - Printing help (OK - finished successfully) 
+  - Passing doubled parameter (OK - finished with error)
+  - Combining feedfile and URL (OK - finished with error)
+  - Not valid parameter / more URLs (OK - finished with error)
+
+ ** Connection (downloading document)**
+  - Testing HTTP with default port (http://www.fit.vutbr.cz/news/news-rss.php) (OK - finished successfully) 
+  - Testing HTTP with custom port (http://www.fit.vutbr.cz:80/news/news-rss.php) (OK - finished successfully) 
+  - Testing HTTP : not existing URL (http://www.fit.vutbr.cz/NOT_VALID) (OK - finished with error)
+  - Testing HTTPS with default port (https://tools.ietf.org/dailydose/dailydose_atom.xml) (OK - finished successfully) 
+  - Testing HTTPS with custom port (https://tools.ietf.org:443/dailydose/dailydose_atom.xml) (OK - finished successfully) 
+  - Testing HTTPS : not existing URL (https://tools.ietf.org/dailydose/NOT_VALID) (OK - finished with error)
+  - Testing HTTPS with /dev/null as certaddr (https://tools.ietf.org/dailydose/dailydose_atom.xml) (OK - finished with error)
+  - Testing not valid URL (abc.ietf.orga) (OK - finished with error)
+
+ ** Parsing ATOM ** 
+  - Parsing corrupted XML content (tests/input/atom/corrupted.xml) (OK - finished with error)
+  - Parsing valid XML content : no -Tua params (tests/input/atom/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Author only (tests/input/atom/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Link only (tests/input/atom/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Date only (tests/input/atom/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : All params -Tua (tests/input/atom/valid_1.xml) (OK - finished successfully) 
+
+ ** Parsing RSSv1 ** 
+  - Parsing corrupted XML content (tests/input/rss_v1/corrupted.xml) (OK - finished with error)
+  - Parsing valid XML content : no -Tua params (tests/input/rss_v1/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Author only (tests/input/rss_v1/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Link only (tests/input/rss_v1/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Date only (tests/input/rss_v1/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : All params -Tua (tests/input/rss_v1/valid_1.xml) (OK - finished successfully) 
+
+ ** Parsing RSSv2 ** 
+  - Parsing corrupted XML content (tests/input/rss_v2/corrupted.xml) (OK - finished with error)
+  - Parsing valid XML content : no -Tua params (tests/input/rss_v2/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Author only (tests/input/rss_v2/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Link only (tests/input/rss_v2/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : Date only (tests/input/rss_v2/valid_1.xml) (OK - finished successfully) 
+  - Parsing valid XML content : All params -Tua (tests/input/rss_v2/valid_1.xml) (OK - finished successfully) 
+
+*** Tests finished ***
+Passed: 31
+Failed: 0
+\end{verbatim}
+}
+\section{Použité zdroje}
+NOTTINGHAM M., SAYRE R. \textit{The Atom Syndication Format} [online]. Release Date: December, 2005. Dostupné z: https://tools.ietf.org/html/rfc4287\\\\
+BRICLEY D., DAVIS Ian et al. \textit{RDF Site Summary (RSS) 1.0} [online] Dostupné z: 
+http://web.resource.org/rss/1.0/spec\\\\
+\textit{RSS 2.0 Specification} [online]. Marec, 2009. Dostupné z: http://www.rssboard.org/rss-specification\\\\
+MATOUSEK P. \textit{Síťové služby a jejich architektura}. Brno, 2014. Publishing house of Brno University of Technology VUTIUM. ISBN  978-80-214-3766-1.\\\\
+BALLARD K., \textit{Secure programming with the OpenSSL API} [online]. November, 2018. Dostupné z:\\ https://developer.ibm.com/tutorials/l-openssl/
+
+\end{document}

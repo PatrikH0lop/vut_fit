@@ -1,0 +1,400 @@
+input[type=text] 
+{
+	font-family: Agenda-Light, Agenda Light, Agenda, Arial Narrow, sans-serif;
+	width: 50%;
+	display: inline-block;
+	padding: 5px 2px;
+	box-sizing: border-box;
+	border: 0px solid #555;
+}
+
+body 
+{
+	margin: 0;
+	background: #C0C0C0;
+}
+
+#MainPage 
+{
+	font-family: Agenda-Light, Agenda Light, Agenda, Arial Narrow, sans-serif;
+	font-weight:100;
+	background: rgba(0,0,0,0.85);
+	color: white;
+	padding: 2rem;
+	width: 55%;
+	margin:2rem;
+	position: relative;
+	font-size: 1.2rem;
+}
+
+#MainPage2 
+{
+	font-family: Agenda-Light, Agenda Light, Agenda, Arial Narrow, sans-serif;
+	font-weight:100;
+	background: rgba(0,0,0,0.85);
+	color: white;
+	padding: 2rem;
+	width: 55%;
+	margin:2rem;
+	position: relative;
+	font-size: 1.2rem;
+}
+
+#PortalPage 
+{
+	font-family: Agenda-Light, Agenda Light, Agenda, Arial Narrow, sans-serif;
+	font-weight:100;
+	background: rgba(0,0,0,0.85);
+	color: white;
+	padding: 2rem;
+	width: 37%;
+	margin:2rem;
+	position: relative;
+	font-size: 1.2rem;
+}
+
+#PortalPageEmp 
+{
+	font-family: Agenda-Light, Agenda Light, Agenda, Arial Narrow, sans-serif;
+	font-weight:100;
+	background: rgba(0,0,0,0.85);
+	color: white;
+	padding: 2rem;
+	width: 66%;
+	margin:2rem;
+	position: relative;
+	font-size: 1.2rem;
+}
+
+
+#PortalPageRightWrapper
+{
+	position: absolute;
+	top: 0;
+	right: 15px;
+	width: 37%;
+	background: rgba(0,0,0,0);
+	padding-right: 2rem;
+	margin-right:2rem;
+} 
+
+#PortalPageRight 
+{
+	font-family: Agenda-Light, Agenda Light, Agenda, Arial Narrow, sans-serif;
+	font-weight:100;
+	background: rgba(0,0,0,0.85);
+	color: white;
+	width: 100%;
+	position: relative;
+	font-size: 1.2rem;
+	padding: 2rem;
+	margin:2rem;
+}
+
+#TeaOffer
+{
+	background: rgba(0,0,0,0.5);
+	color: white;
+	width: 80%;
+	padding:1rem;
+	position: relative;
+	font-size: 0.9rem;
+}
+
+#Login 
+{
+	font-family: Agenda-Light, Agenda Light, Agenda, Arial Narrow, sans-serif;
+	font-weight:100;
+	background: rgba(0,0,0,0.85);
+	color: white;
+	padding: 2rem;
+	width: 55%;
+	margin:2rem;
+	position: relative;
+	font-size: 1.2rem;
+}
+
+h1 
+{
+	font-size: 3rem;
+	text-transform: uppercase;
+	margin-top: 0;
+	letter-spacing: .3rem;
+}
+
+h2 
+{
+	font-size: 1.8rem;
+	text-transform: uppercase;
+	margin-top: 0;
+	letter-spacing: .18rem;
+}
+
+h3 
+{
+	font-size: 1.2rem;
+	text-transform: uppercase;
+	margin-top: 0;
+	letter-spacing: .2rem;
+}
+
+table
+{
+	width: 100%;
+	padding: .4rem;
+	margin: 1rem auto;
+	font-size: 1rem;
+	background: rgba(255,255,255,0.23);
+	color: #fff;
+	border-radius: 2px;
+	border-collapse: collapse;
+}
+
+th, td
+{
+	border: 1px solid white;
+}
+
+select[name="type"]
+{
+	width: 15%;
+}
+
+select[name="role"]
+{
+	width: 25%;
+}
+
+select[name="country"], select[name="province"]
+{
+	width: 44%;
+}
+
+select
+{
+	width: 100%;
+	padding: .4rem;
+	margin: 1rem auto;
+	font-size: 1rem;
+	background: rgba(255,255,255,0.23);
+	color: #fff;
+	border-radius: 2px;
+	border-collapse: collapse;
+}
+
+option
+{
+	background: gray;
+	color: #fff;
+}
+
+button:focus 
+{
+	outline:0;
+}
+
+a 
+{
+	display: inline-block;
+	color: #fff;
+	text-decoration: none;
+	background:rgba(0,0,0,0.5);
+	padding: .5rem;
+	transition: .6s background;
+}
+
+a:hover
+{
+	background:rgba(0,0,0,0.9);
+}
+
+#PortalPageRight button 
+{
+	width: 80%;
+	padding: .4rem;
+	border: none;
+	margin: 0.2rem;
+	font-size: 0.9rem;
+	background: rgba(255,255,255,0.10);
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: .3s background;
+}
+
+#PortalPageRight button:hover 
+{
+	background: rgba(0,0,0,0.5);
+}
+
+#PortalPageEmp  input 
+{
+	width: 50%;
+	padding: .4rem;
+	border: none;
+	margin: 0.2rem;
+	font-size: 1.2rem;
+	background: rgba(255,255,255,0.10);
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: .3s background;
+}
+
+#PortalPageEmp input:hover 
+{
+	background: rgba(0,0,0,0.5);
+}
+
+#PortalPageRight input 
+{
+	width: 100%;
+	padding: .4rem;
+	border: none;
+	margin: 0.2rem;
+	font-size: 1.2rem;
+	background: rgba(255,255,255,0.10);
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: .3s background;
+}
+
+#PortalPageRight input:hover 
+{
+	background: rgba(0,0,0,0.5);
+}
+
+#PortalPage input[name="price"]
+{
+	width: 10%;
+}
+
+#PortalPage input[name="amount"]
+{
+	width: 10%;
+}
+
+#PortalPage input[name="brew"] 
+{
+	width: 10%;
+}
+
+#PortalPage input[name="wage"] 
+{
+	width: 20%;
+}
+
+#PortalPage input[name="name"]
+{
+	width: 70%;
+}
+
+#PortalPage input[name="address"]
+{
+	width: 70%;
+}
+
+#PortalPage input[name="contact"]
+{
+	width: 70%;
+}
+
+#PortalPage input[name="password1"]
+{
+	width: 60%;
+}
+
+#PortalPage input[name="password2"]
+{
+	width: 60%;
+}
+
+#PortalPage input[name="date"]
+{
+	width: 60%;
+}
+
+#PortalPage input[name="account"]
+{
+	width: 70%;
+}
+
+#PortalPage input[name="login"]
+{
+	width: 70%;
+}
+
+#PortalPage input[name="distributor"]
+{
+	width: 70%;
+}
+
+#PortalPage input[name="quality"]
+{
+	width: 30%;
+}
+
+#PortalPage input 
+{
+	width: 100%;
+	padding: .4rem;
+	border: none;
+	margin: 0.2rem;
+	font-size: 1.2rem;
+	background: rgba(255,255,255,0.10);
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: .3s background;
+}
+
+#PortalPage input:hover 
+{
+	background: rgba(0,0,0,0.5);
+}
+
+#Login input 
+{
+	width: 80%;
+	padding: .4rem;
+	border: none;
+	margin: 1rem auto;
+	font-size: 1.3rem;
+	background: rgba(255,255,255,0.23);
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: .3s background;
+}
+
+#Login input:hover 
+{
+	background: rgba(0,0,0,0.5);
+}
+
+
+.overlay {
+	visibility: hidden;
+}
+
+.reveal-modal {
+    background:#808080; 
+    margin: auto auto;
+    width: 500px; 
+    position: absolute; 
+	bottom: 0;
+	right: 0;
+    padding:30px;
+	display: none;
+}
+
+.brews {
+	display: none !important; 
+}
+
+select option[disabled]
+{ 
+    display:none;
+}
+

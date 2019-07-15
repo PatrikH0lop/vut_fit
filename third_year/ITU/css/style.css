@@ -1,0 +1,445 @@
+input[type=text], input[type=password] {
+        margin: 10px 0;
+        width: 100%;
+        padding: 3px 5px;
+        padding-bottom: 5px;
+}
+
+.map {
+	margin: auto auto;
+}
+
+input[type=submit] {
+        padding: 5px 15px;
+        margin-top: 20px;
+        width: 100%;
+        font-family: Arial;
+}
+
+.login_label {
+        font-family: Arial;
+        font-weight: bold;
+        padding-top: 5px;
+}
+
+.login_form {
+        width: 30%;
+        margin: auto auto;
+        vertical-align: middle;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform:translate(-50%, -50%);
+}
+
+input[type=text]:focus, input[type=password]:focus {
+	background-color: lightyellow;
+}
+
+.main_label {
+        position: absolute;
+        top:25%;
+        left:50%;
+        transform:translate(-50%, -50%);
+}
+
+.bottom_label {
+        position: absolute;
+        top: 88%;
+        left: 80%;
+        transform:translate(-50%, -50%);
+        text-align: center;
+}
+
+p {
+        text-align: center;
+        font-weight: bold;
+        font:  400 30px/1.3 'Merienda One', Helvetica, sans-serif;
+}
+
+.form_olab {
+		text-align: center;
+		margin: auto;
+		font-size: 30px;
+        //font:  400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+}
+
+body {
+        width: 100%;
+        height: 100%;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
+a
+{
+	display: inline-block;
+	color: #000;
+	text-decoration: none;
+	background:rgba(255,255,255,0.5);
+	padding: .5rem;
+	transition: .6s background;
+}
+
+a:hover
+{
+	background:rgba(255,255,255,0.9);
+}
+
+
+button
+{
+    width: 75%;
+	margin: 0 auto;
+	display: block;
+	color: #000;
+	text-decoration: none;
+	background:rgba(255,255,255,0.5);
+	padding: .5rem;
+	transition: .6s background;
+}
+
+button:hover
+{
+	background:rgba(255,255,255,0.9);
+}
+
+button:focus {
+    outline: none;
+}
+
+.button-asset{
+	width: 75%;
+	margin: 0 auto;
+	display: block;
+	color: #000;
+	text-decoration: none;
+	background:rgba(255,255,255,0.5);
+	padding: .5rem;
+	transition: .6s background;
+}
+
+table
+{
+	margin-left: 0px;
+	margin-right: auto;
+	width: 75%;
+	padding: .4rem;
+	margin: 1rem auto;
+	font-size: 1rem;
+	background: rgba(255,255,255,0.75);
+	color: #000;
+	border-radius: 2px;
+	border-collapse: collapse;
+}
+
+th, td
+{
+	border: 1px solid black;
+}
+
+.horizontal_layout {
+	float: left;
+	width: 100%;
+}
+
+.horizontal_layout div{
+	float: left;
+}
+
+.photo {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	height: auto;
+	max-width: 80%;
+}
+
+.tool_photo {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	height: auto;
+	max-width: 50%;
+	max-height: 20%;
+}
+
+.table_cell {
+	text-align: center;
+}
+
+.action_icon {
+	text-align: center;
+	margin-left: 10%;
+}
+
+.action_label{
+	text-align: center;
+	font-size: 10px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal_inside {
+	margin: auto;
+	background-color: #fefefe;
+	width: 30%;
+	border: 2px solid black;
+	background: linear-gradient(to left bottom, lightgray, white);
+	overflow-y: scroll;
+	max-height: 80%;
+}
+
+.map_inside {
+	margin: auto;
+	background-color: #fefefe;
+	width: 60%;
+	border: 2px solid black;
+	background: linear-gradient(to left bottom, lightgray, white);
+	max-width: 80%;
+	max-height: 80%;
+	overflow-x: scroll;
+	overflow-y: scroll;
+}
+
+.fwrapper {
+	margin: 10px;
+}
+
+.padded_select {
+	//margin-left: 15px;
+	width: 100%;
+}
+
+.form_hint {
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.image_and_desc {
+	margin: auto;
+	text-align: center;
+}
+
+select option[disabled] {
+	display: none;
+}
+
+#Actions {
+    font: 400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+    padding-top: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    color: black;
+    font-size: 1.2rem;
+    padding: 2rem;
+    margin: 2rem;
+    //float: right;
+    width: 85%;
+}
+
+#Options
+{
+    font:  400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+    padding-top: 5px;
+	background: rgba(255,255,255,0.7);
+	color: black;
+	width: 90%;
+	font-size: 1.2rem;
+	padding: 2rem;
+	margin:2rem;
+}
+
+#PersonalInfo
+{
+    font: 400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+    padding-top: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    color: black;
+    font-size: 1.2rem;
+    margin:2rem;
+    width: 35%;
+}
+
+#Main
+{
+    font:  400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+    padding-top: 5px;
+	background: rgba(255,255,255,0.7);
+	color: black;
+	width: 50%;
+	font-size: 1.2rem;
+	padding: 2rem;
+	margin:2rem;
+}
+
+#MainReport
+{
+	font:  400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+	padding-top: 5px;
+	background: rgba(255,255,255,0.7);
+	color: black;
+	width: 45%;
+	font-size: 1.2rem;
+	padding: 2rem;
+	margin:2rem;
+}
+
+#reportColumn1{
+	width: 10%;
+}
+
+#reportColumn2{
+	width: 10%;
+}
+
+#reportColumn3{
+	width: 40%;
+}
+
+#Report
+{
+    font:  400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+    padding-top: 5px;
+	background: rgba(255,255,255,0.7);
+	color: black;
+	width: 35%;
+	font-size: 1.2rem;
+	margin:2rem;
+}
+
+#Report  input
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+	color: #000;
+	text-decoration: none;
+	background:rgba(255,255,255,0.5);
+	width: 80%;
+	padding: .5rem;
+	transition: .6s background;
+}
+
+#Report input:hover
+{
+	background:rgba(255,255,255,0.9);
+}
+
+#Main  input
+{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+	color: #000;
+	text-decoration: none;
+	background:rgba(255,255,255,0.5);
+	width: 25%;
+	padding: .5rem;
+	transition: .6s background;
+}
+
+#Main input:hover
+{
+	background:rgba(255,255,255,0.9);
+}
+
+select
+{
+	padding: .4rem;
+	margin: 1rem auto;
+	font-size: 1rem;
+	background: rgba(0,0,0,0.23);
+	color: #000;
+	border-radius: 2px;
+	border-collapse: collapse;
+	width: 30%;
+}
+
+option
+{
+	background: gray;
+	color: #000;
+}
+
+
+textarea {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#data{
+	display: none;
+	-moz-box-shadow:    inset 0 0 10px #000000;
+	-webkit-box-shadow: inset 0 0 10px #000000;
+	box-shadow:         inset 0 0 10px #000000;
+	border: 2px solid dimgray;
+	border-radius: 25px;
+	position: absolute;
+	float: left;
+	background: #fefefe;
+	padding: 10px;
+}
+
+#MainPlaceholder
+{
+	font:  400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+	padding-top: 5px;
+	background: rgba(255,255,255,0.7);
+	color: black;
+	width: 82%;
+	font-size: 1.2rem;
+	padding: 2rem;
+	margin:2rem;
+	height: auto;
+	padding-left: 10%;
+	display: inline-block;
+}
+
+
+
+
+#MainPlaceholderFilter
+{
+	font:  400 100px/1.3 'Merienda One', Helvetica, sans-serif;
+	background: rgba(255,255,255,0.7);
+	color: black;
+	width: 20%;
+	font-size: 1.2rem;
+	padding: 2rem;
+	float: left;
+	margin:2rem;
+}
+
+
+#MainPlaceholderFilter  input
+{
+	display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+	color: #000;
+	text-decoration: none;
+	background:rgba(255,255,255,0.5);
+	width: 100%;
+	padding: .5rem;
+	transition: .6s background;
+}
+
+
+
+#MainPlaceholder input:hover
+{
+	background:rgba(255,255,255,0.9);
+}

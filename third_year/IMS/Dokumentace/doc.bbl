@@ -1,0 +1,43 @@
+\newcommand{\noopsort}[1]{}
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem{IMS}
+Peringer, P.; Hrub\'{y}, M.: \emph{Prezentace z předmětu IMS}. [online],
+  {c}it. [26.\,11.\,2018].
+
+\bibitem{PAL}
+\emph{Wikipedia stránka europalety}. [online], {c}it. [25.\,11.\,2018].
+\newline\urlprefix\url{https://cs.wikipedia.org/wiki/Europaleta}
+
+\bibitem{LAL}
+\emph{Str\'{a}nky firmy [REDACTED]}. [online], {c}it. [16.\,11.\,2018].
+\newline\urlprefix\url{[REDACTED]}
+
+\bibitem{SIML}
+Peringer, P.: \emph{SIMulation LIBrary for C++}. [online], {c}it.
+  [26.\,11.\,2018].
+\newline\urlprefix\url{https://www.fit.vutbr.cz/~peringer/SIMLIB}
+
+\bibitem{Zadani}
+Hrub\'{y}, M.: \emph{Zad\'{a}n\'{i} projektu IMS}. [online], {c}it.
+  [27.\,11.\,2018].
+\newline\urlprefix\url{http://perchta.fit.vutbr.cz:8000/vyuka-ims/24}
+
+\bibitem{G}
+\emph{g++ compiler}. [online], {c}it. [26.\,11.\,2018].
+\newline\urlprefix\url{https://linux.die.net/man/1/g++}
+
+\bibitem{SPN}
+\emph{The home of the New GreatSPN Graphical Editor}. [online], {c}it.
+  [27.\,11.\,2018].
+\newline\urlprefix\url{http://www.di.unito.it/~amparore/mc4cslta/editor.html}
+
+\end{thebibliography}

@@ -1,0 +1,17 @@
+7
+47.0 Company 80.0 40.0
+stock_number 30.0 average_salary 26000.0 stock_value 302.0 
+48.0 CompanyResult 440.0 120.0
+49.0 Company 80.0 120.0
+stock_number 300.0 average_salary 15000.0 stock_value 30.0 
+50.0 MergeCompany 200.0 80.0
+51.0 MergeCompany 320.0 120.0
+52.0 Evaluator 320.0 200.0
+53.0 Result 440.0 200.0
+6
+49.0 PortC 50.0 PortB
+47.0 PortC 50.0 PortA
+50.0 PortC 51.0 PortA
+51.0 PortC 48.0 PortC
+50.0 PortC 52.0 PortA
+52.0 PortC 53.0 PortA

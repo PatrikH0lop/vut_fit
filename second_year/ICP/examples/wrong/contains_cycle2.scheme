@@ -1,0 +1,26 @@
+10
+7 Constant -30,000000 -300,000000
+value 70,000000 
+8 PowerPlant -204,000000 -136,000000
+distributed_energy 600,000000 reactor_temperature 50,000000 risk_probability 0,400000
+9 PowerPlant -203,000000 -73,000000
+distributed_energy 10,000000 reactor_temperature 80,000000 risk_probability 0,800000
+10 CommonRisk -80,000000 -105,000000
+11 Multiplier 146,000000 -218,000000
+12 Adder 9,000000 -84,000000
+14 Company -151,000000 -217,000000
+average_salary 60,000000 stock_number 50,000000 stock_value 10,000000 
+15 Evaluator -36,000000 -216,000000
+16 Adder 58,000000 -175,000000
+17 Result 255,000000 -217,000000
+10
+8 PortC 10 PortA
+9 PortC 10 PortB
+7 PortC 11 PortA
+10 PortC 12 PortA
+14 PortC 15 PortA
+16 PortC 11 PortB
+15 PortC 16 PortA
+11 PortC 12 PortB
+12 PortC 16 PortB
+11 PortC 17 PortC

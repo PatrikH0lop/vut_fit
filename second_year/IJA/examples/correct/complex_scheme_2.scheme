@@ -1,0 +1,28 @@
+11
+71.0 Constant 80.0 40.0
+value 60.0 
+72.0 Constant 80.0 120.0
+value 30.0 
+73.0 Adder 200.0 80.0
+74.0 Multiplier 360.0 120.0
+75.0 Powerplant 120.0 200.0
+distributed_energy 600.0 reactor_temperature 50.0 risk_probability 1.0 
+76.0 Powerplant 120.0 280.0
+distributed_energy 700.0 reactor_temperature 60.0 risk_probability 0.8 
+77.0 CommonRiskEstimator 240.0 240.0
+78.0 Divider 480.0 200.0
+79.0 Company 280.0 320.0
+stock_number 10.0 average_salary 30000.0 stock_value 300.0 
+80.0 Evaluator 400.0 320.0
+81.0 Result 600.0 200.0
+10
+71.0 PortC 73.0 PortA
+72.0 PortC 73.0 PortB
+73.0 PortC 74.0 PortA
+75.0 PortC 77.0 PortA
+76.0 PortC 77.0 PortB
+77.0 PortC 74.0 PortB
+74.0 PortC 78.0 PortA
+79.0 PortC 80.0 PortA
+80.0 PortC 78.0 PortB
+78.0 PortC 81.0 PortA

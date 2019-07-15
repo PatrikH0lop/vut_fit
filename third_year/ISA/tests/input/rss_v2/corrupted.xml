@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<channel>
+		<title>Wikipedia  - Recent changes [en]</title>
+		<link>https://en.wikipedia.org/wiki/Special:RecentChanges</link>
+		<description>Track the most recent changes to the wiki in this feed.</description>
+		<language>en</language>
+		<generator>MediaWiki 1.33.0-wmf.3</generator>
+		<lastBuildDate>Sun, 11 Nov 2018 12:17:02 GMT</lastBuildDate>
+		<item>
+			<title>The Quality of Life (Star Trek: The Next Generation)</title>
+			<link>https://en.wikipedia.org/w/index.php?title=The_Quality_of_Life_(Star_Trek:_The_Next_Generation)&amp;diff=868316339&amp;oldid=810553936</link>
+			<guid isPermaLink="false">https://en.wikipedia.org/w/index.php?title=The_Quality_of_Life_(Star_Trek:_The_Next_Generation)&amp;diff=868316339&amp;oldid=810553936</guid>
+			<pubDate>Sun, 11 Nov 2018 12:16:33 GMT</pubDate>
+			<author>testauthor@gmail.com</author>
+			<comments>https://en.wikipedia.org/wiki/Talk:This_Week_(2003_TV_programme)</comments>
+		</item>
+</rss>

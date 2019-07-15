@@ -1,0 +1,26 @@
+10
+0 Constant -441,000000 -209,000000
+value 50,000000 
+1 Constant -438,000000 -129,000000
+value 100,000000 
+2 Adder -323,000000 -174,000000
+4 Constant -326,000000 -84,000000
+value 50,000000 
+6 Constant -328,000000 -21,000000
+value 5,000000 
+8 Constant -325,000000 37,000000
+value 2,000000 
+3 Subtractor -219,000000 -126,000000
+7 Multiplier -215,000000 -17,000000
+5 Divider -127,000000 -71,000000
+9 Result -17,000000 -71,000000
+9
+0 PortC 2 PortA
+1 PortC 2 PortB
+2 PortC 3 PortA
+4 PortC 3 PortB
+3 PortC 5 PortA
+6 PortC 7 PortA
+8 PortC 7 PortB
+7 PortC 5 PortB
+5 PortC 9 PortC

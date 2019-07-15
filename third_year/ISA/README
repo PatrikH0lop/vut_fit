@@ -1,0 +1,65 @@
+### Informácie o programe
+
+Názov: Čtečka novinek ve formátu Atom s podporou TLS
+Predmet: ISA 2018
+Autor: Patrik Holop (xholop01)
+Dátum aktualizácie: 11.11.2018
+Licencia: GNU GPL v3
+
+### Popis
+- Program slúži na získanie a spracovanie informácií zo zadaných URL zdrojov vo formátoch Atom a RSS. 
+- Program podporuje RSSv1 aj RSSv2. 
+- Zo zadaných dokumentov sa snaží získať čo najviac informácií, preto sa neukončí chybou pri chýbajúcich povinných elementoch. 
+- Podporuje TLS/SSL, je možné zadať certifikačný súbor a adresár obsahujúci certifikáty. 
+- Podporuje prvky dc:creator a dc:date z rozšírenia Dublic Core.
+
+Formát spustenia:
+feedreader <URL | -f <feedfile>> [-c <certfile>] [-C <certaddr>] [-T] [-a] [-u] [-h] [-p]
+Parameter -h vypíše nápovedu k spusteniu.
+Parameter -p slúži na testovanie a nemal by sa používať.
+Očakáva sa, že adresár s certifikátmi bola správne predpripravený príkazov c_rehash.
+
+Príklad spustenia:
+./feedreader http://www.fit.vutbr.cz/news/news-rss.php -Tua
+
+Testy spustíte príkazom:
+make test
+
+### Doplňujúce informácie
+
+Štruktúra odovzdávaného archívu:
+
+├── client.cpp
+├── client.h
+├── data
+│   └── source_list.txt
+├── doc.pdf
+├── errors.cpp
+├── errors.h
+├── feedreader
+├── feedreader.cpp
+├── feedreader.h
+├── file.cpp
+├── file.h
+├── information.cpp
+├── information.h
+├── Makefile
+├── README
+└── tests
+    ├── input
+    │   ├── atom   
+    │   ├── rss_v1    
+    │   └── rss_v2    
+    ├── results
+    │   ├── atom
+    │   ├── rss_v1
+    │   └── rss_v2
+    └── test.sh
+
+Zdroje:
+- Implementácia OpenSSL je založená na 
+  https://developer.ibm.com/tutorials/l-openssl/
+- Informácie o formátoch sú získané z 
+  https://tools.ietf.org/html/rfc4287
+  http://web.resource.org/rss/1.0/
+  http://www.rssboard.org/rss-specification

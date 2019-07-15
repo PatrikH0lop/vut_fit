@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: doc.aux
+The style file: czechiso.v2.bst
+Database file #1: doc.bib
+Warning--entry type for "IMS" isn't style-file defined
+--line 11 of file doc.bib
+Warning--entry type for "SIML" isn't style-file defined
+--line 17 of file doc.bib
+Warning--entry type for "Zadani" isn't style-file defined
+--line 24 of file doc.bib
+Warning--entry type for "SPN" isn't style-file defined
+--line 31 of file doc.bib
+Warning--entry type for "G" isn't style-file defined
+--line 37 of file doc.bib
+Warning--entry type for "PAL" isn't style-file defined
+--line 43 of file doc.bib
+Warning--entry type for "LAL" isn't style-file defined
+--line 50 of file doc.bib
+You've used 7 entries,
+            2829 wiz_defined-function locations,
+            634 strings with 5562 characters,
+and the built_in function-call counts, 1477 in all, are:
+= -- 82
+> -- 20
+< -- 0
++ -- 12
+- -- 4
+* -- 44
+:= -- 108
+add.period$ -- 14
+call.type$ -- 7
+change.case$ -- 7
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 177
+empty$ -- 194
+format.name$ -- 5
+if$ -- 342
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 46
+newline$ -- 38
+num.names$ -- 3
+pop$ -- 150
+preamble$ -- 2
+purify$ -- 0
+quote$ -- 0
+skip$ -- 51
+stack$ -- 0
+substring$ -- 14
+swap$ -- 71
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 3
+width$ -- 8
+write$ -- 61
+(There were 7 warnings)

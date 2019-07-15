@@ -1,0 +1,15 @@
+6
+0 Company -322,000000 -238,000000
+average_salary 20000,000000 stock_number 150,000000 stock_value 10,000000 
+1 Company -319,000000 -162,000000
+average_salary 40000,000000 stock_number 500,000000 stock_value 20,000000 
+2 CompanyMerge -212,000000 -197,000000
+3 Evaluator -99,000000 -198,000000
+4 ResultCompany -92,000000 -122,000000
+5 Result 11,000000 -197,000000
+5
+0 PortC 2 PortA
+1 PortC 2 PortB
+2 PortC 3 PortA
+2 PortC 4 PortC
+3 PortC 5 PortC

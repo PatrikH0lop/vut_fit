@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-2"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<h1>Distributor čajů</h1> 
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>
+	    <a href="mailto:xholop01@stud.fit.vutbr.cz">xholop01@stud.fit.vutbr.cz</a> 
+		databáze, odběratelské rozhraní, přihlašovací rozhraní
+	</dd>
+	<dd>
+	    <a href="mailto:xhraba12@stud.fit.vutbr.cz">xhraba12@stud.fit.vutbr.cz</a> - 
+		zaměstnanecké rozhraní, administrátorské rozhraní
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="http://www.stud.fit.vutbr.cz/~xholop01/IIS">http://www.stud.fit.vutbr.cz/~xholop01/IIS</a></dd>
+    <dd><a href="http://www.stud.fit.vutbr.cz/~xhraba12/IIS">http://www.stud.fit.vutbr.cz/~xhraba12/IIS</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
+<tr><td>employee</td><td>employee</td><td>Zaměstnanec</td></tr>
+<tr><td>user</td><td>user</td><td>Zákazník</td></tr>
+</table>
+
+<h2>Implementace</h2>
+<p>
+  <ul>
+    	<li><b>index.php</b> - přihlašovací rozhraní </li> 
+    	<li><b>registration.php</b> - registrace uživatelů </li> 
+    	<li><b>customer/index.php</b> - rozhraní zákazníka (odběratele) </li> 
+    	<li><b>customer/transaction_history.php</b> - zobrazení historie objednávek pro zákazníka </li> 
+    	<li><b>employee/batch_options.php</b> - Operace nad várkami čaje </li> 
+    	<li><b>employee/country_options.php</b> - Operace nad zeměmi </li> 
+    	<li><b>employee/discounts.php</b> - Řízení slev </li> 
+    	<li><b>employee/index.php</b> - Rozhraní zaměstnance </li> 
+    	<li><b>employee/order_options.php</b> - Změny vytvořených objednávek </li> 
+    	<li><b>employee/province_options.php</b> - Operace nad oblastmi </li> 
+    	<li><b>employee/tea_options.php</b> - Operace nad čajem </li>     
+    	<li><b>admin/admin_options.php</b> - Řízení administrátorů </li>     
+    	<li><b>admin/emp_options.php</b> - Řízení zaměstnanců </li>     
+    	<li><b>admin/index.php</b> - Administrátorské rozhraní </li>     
+    	<li><b>timeout.php</b> - PHP skript zajišťující automatické odhlašování </li> 
+  </ul>
+  Změny proti původnímu návrhu případů užití:
+  <ul>
+    <li> Role Distributor a Skladník se spojili do jedné role Zaměstnanec v důsledku toho, že skladník vykonával operace týkající se objednávek, což by měl být úkol distributora. </li>
+    <li> Přidala se role Administrátor, která rozšiřuje roli Zaměstnanec o možnosti přidávaní nových zaměstnanců a administrátorů. V původním návrhu tato možnost nebyla.</li>
+    <li> Faktura není vytvářena manuálne Zaměstnancem, ale automaticky při vzniku objednávky, a zaměstnanec může upravovat její stav. Lépe to modeluje reálné podmínky. </li>
+    <li> Role Čas se zrušila, protože uživatel je na slevy upozorněn při vytváření objednávky a hned vidí právě dostupnou nabídku (není měněna například každý týden jak to bylo myšleno v původním návrhu.) </li>
+  </ul>
+</p>
+
+<h2>Instalace</h2>
+<ul>
+<li>Obecný postup</li>
+  <ul>
+    	<li>Inicializování databázy skriptem db_init.sql</li>
+		<li>Rozbalení archivu do cílového adresáře</li>
+    	<li>Nastavení opravnení to daný adresář a jeho soubory</li>
+  </ul>
+<li>Konkrétní příklad pro uživatele na serveru eva.fit.vutbr.cz</li>
+  <ul>
+    	<lI>Rozbalit archiv do zložky v domovském adresáři</lI>
+    	<li>Spustit příkaz <b>sh eva_script.sh</b>, který nakopíruje soubory do složky WWW/IIS (předpokláda se, že již existuje) a nastaví příslušná práva</li>
+    	<li>Spustit příkaz <b>sh reset_db.sh</b>, který inicializuje databázi</li>
+    	<li>Stránka pak bude dostupná na odkazu <b>www.stud.fit.vutbr.cz/~xhraba12/IIS/index.php</b></li>
+  </ul>
+
+<li>Softwarové požadavky</li>
+  		<ul>
+        	<li>Konfigurace podle serveru Eva</li>
+          	<li>PHP verze 5.6, MySQL verze 5.6.40</li>
+  		</ul>
+</ul>
+
+<h2>Známé problémy</h2>
+	Žádné
+  
+<h2>Použité zdroje</h2>
+Použité css bylo inspirováno stránkou <a href="https://codepen.io/dudleystorey/pen/knqyK">https://codepen.io/dudleystorey/pen/knqyK</a>
+<br>
+Obrázky byly převzaty z open source zdroje <a href="https://pexels.com">https://pexels.com</a>
+
+</body>
+</html>
+

@@ -1,0 +1,22 @@
+# FIT
+http://www.fit.vutbr.cz/news/news-rss.php
+
+# IETF
+https://tools.ietf.org/dailydose/dailydose_atom.xmla
+
+#Wikipedia
+https://en.wikipedia.org/w/api.php?hidebots=1&days=7&limit=50&hidewikidata=1&action=feedrecentchanges&feedformat=atom
+https://en.wikipedia.org/w/api.php?hidebots=1&days=7&limit=50&hidewikidata=1&action=feedrecentchanges&feedformat=rss
+
+#The register
+https://www.theregister.co.uk/headlines.atom
+https://www.theregister.co.uk/data_centre/headlines.atom
+https://www.theregister.co.uk/software/headlines.atom
+https://www.theregister.co.uk/hardware/headlines.atom
+
+#xkcd
+https://xkcd.com/atom.xml
+https://what-if.xkcd.com/feed.atom
+
+#RSS v1 example
+https://www.ccn.com/feed/rdf/

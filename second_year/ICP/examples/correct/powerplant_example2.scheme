@@ -1,0 +1,26 @@
+10
+8 PowerPlant -250,000000 -258,000000
+distributed_energy 600,000000 reactor_temperature 500,000000 risk_probability 0,400000
+9 PowerPlant -249,000000 -187,000000
+distributed_energy 2000,000000 reactor_temperature 500,000000 risk_probability 0,500000
+10 PowerPlant -247,000000 -112,000000
+distributed_energy 5000,000000 reactor_temperature 30,000000 risk_probability 1,000000
+11 BetterPlant -141,000000 -151,000000
+12 BetterPlant -37,000000 -188,000000
+13 CommonRisk -56,000000 -58,000000
+15 Constant 23,000000 -129,000000
+value 120,000000 
+16 Result 44,000000 -59,000000
+14 ReactorCooler 108,000000 -172,000000
+17 PowerPlantResult 221,000000 -172,000000
+10
+9 PortC 11 PortA
+10 PortC 11 PortB
+8 PortC 12 PortA
+11 PortC 12 PortB
+10 PortC 13 PortB
+11 PortC 13 PortA
+12 PortC 14 PortA
+15 PortC 14 PortB
+13 PortC 16 PortC
+14 PortC 17 PortC
