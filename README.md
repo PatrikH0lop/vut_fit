@@ -3,6 +3,8 @@ This repository contains examples of my school projects and assignments.
 
 **Note:** *This repository may contain unfinished work, work in progress or changes that were not presented in the original assignments. Also, this is not a complete collection of all assignments. It should not be used for plagiarism of any kind.*
 
+You can find more information about the courses and assignments on the [Wiki](https://github.com/PatrikH0lop/vut_fit/wiki).
+
 ## Undergraduate studies
 - [First & Second Semester](https://github.com/PatrikH0lop/vut_fit/tree/master/first_year)
 
