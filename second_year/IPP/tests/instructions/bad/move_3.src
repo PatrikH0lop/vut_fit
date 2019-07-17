@@ -1,0 +1,3 @@
+.ippcode18
+DEFVAR GF@a
+MOFD GF@a int@5

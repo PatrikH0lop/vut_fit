@@ -1,4 +1,5 @@
 .ippcode18
+CREATEFRAME
 defvar TF@a
 MOVE TF@a int@5
 WRITE TF@a

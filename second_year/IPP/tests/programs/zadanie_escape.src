@@ -1,0 +1,12 @@
+.IPPcode18
+DEFVAR GF@counter
+MOVE GF@counter string@ # Inicializace prom ě nn é na pr á zdn ý ř et ě zec
+# Jednoduch á iterace , dokud nebude spln ě na zadan á podm í nka
+LABEL while
+JUMPIFEQ end GF@counter string@aaa
+WRITE string@counter\032obsahuje\032
+WRITE GF@counter
+WRITE string@\010
+CONCAT GF@counter GF@counter string@a
+JUMP while
+LABEL end

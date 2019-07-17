@@ -1,0 +1,5 @@
+.ippcode18
+CREATEFRAME
+DEFVAR TF@a
+MOVE TF@b int@5
+WRITE TF@a

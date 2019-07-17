@@ -1,9 +1,12 @@
 .ippcode18
-
+CREATEFRAME
 Defvar TF@a
 Defvar GF@b
+PUSHFRAME
 Defvar LF@c
-
+CREATEFRAME
+Defvar TF@a
+Defvar TF@b
 MOVE TF@a int@5
 MOVE GF@b string@8α
 MOVE LF@c bool@true

@@ -1,3 +1,5 @@
 .ippcode18
+CREATEFRAME
+PUSHFRAME
 defvar LF@@
 
